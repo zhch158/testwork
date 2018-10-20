@@ -1,0 +1,42 @@
+#TOP:从开始去掉几行，BOTTOM：从结尾去掉几行，LEFT：从左边去掉几列，RIGHT：从右边去掉几列
+#测试yusys运营支撑系统配置信息
+#全局设置
+- config:
+    name: "损益明细"
+    import_module_items:
+        - utility
+        - time
+    logfile: X:/TEMP/report/test.log
+    FirefoxProfile: F:/workspace/selenium-profile
+    session: X:/TEMP/firefox-params.json
+    downloaddir: X:/TEMP
+    reportdir: X:/TEMP/report
+    variables:
+        - workdir: F:/workspace/python/data
+    runner: ex_selenium_script.PageSimulation
+    
+- test:
+    name: 项目损益明细表-${核算类别}-${报表口径}-${查询时间}-${项目分类}-${保存目录}
+    parameters:
+        - 核算类别-报表口径-查询时间-项目分类-保存目录: ${load_xls("${workdir}/yusys_testcase_20180608.xlsx", "损益.DATA")}
+    request:
+        steps: ${load_xls("${workdir}/yusys_testcase_20180608.xlsx", "损益")}
+
+- test:
+    name: 部门损益汇总表-${核算类别}-${报表口径}-${查询时间}-${部门类型}-${保存目录}
+    parameters:
+        - 核算类别-报表口径: 
+            - ["完工百分比法", "考核口径"]
+            - ["完工百分比法", "管理口径"]
+        - 查询时间: ["2018-06"]
+        - 部门类型: ["一级部", "二级部"]
+        - 保存目录: ["${workdir}"]
+    request:
+        steps: ${load_xls("${workdir}/yusys_testcase_20180608.xlsx", "部门损益")}
+
+- test:
+    name: 项目人月明细-${查询时间}-${保存目录}
+    parameters:
+        - 查询时间-保存目录: ${load_xls("${workdir}/yusys_testcase_20180608.xlsx", "考勤.DATA")}
+    request:
+        steps: ${load_xls("${workdir}/yusys_testcase_20180608.xlsx", "考勤")}
