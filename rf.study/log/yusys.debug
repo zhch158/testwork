@@ -1,0 +1,83 @@
+==============================================================================
+20180820 15:40:31.837 - INFO - + START SUITE: Test Yaml [ ]
+==============================================================================
+20180820 15:40:31.846 - INFO - +- START TEST: 验证yaml文件 [ ]
+------------------------------------------------------------------------------
+20180820 15:40:31.846 - INFO - +-- START KW: BuiltIn.Log Variables [ ]
+20180820 15:40:31.847 - INFO - ${/} = \
+20180820 15:40:31.847 - INFO - ${:} = ;
+20180820 15:40:31.847 - INFO - ${\n} =
+20180820 15:40:31.847 - INFO - &{add_cols} = { cols=[{'COL': '1', 'COL_NAME': '月份', 'CONTENT': '201806'}, {'COL': '35', 'COL_NAME': '口径', 'CONTENT': '考核口径'}] }
+20180820 15:40:31.847 - INFO - &{col1} = { COL=1 | COL_NAME=月份 | CONTENT=201806 }
+20180820 15:40:31.847 - INFO - &{col35} = { COL=35 | COL_NAME=口径 | CONTENT=考核口径 }
+20180820 15:40:31.847 - INFO - @{cols} = [ {'COL': '1', 'COL_NAME': '月份', 'CONTENT': '201806'} | {'COL': '35', 'COL_NAME': '口径', 'CONTENT': '考核口径'} ]
+20180820 15:40:31.847 - INFO - ${DEBUG_FILE} = G:\Software\Develop\Robotframework\SeleniumLibrary-3.1.1\study\log\yusys.debug
+20180820 15:40:31.847 - INFO - ${EXECDIR} = G:\Software\Develop\Robotframework\SeleniumLibrary-3.1.1\study
+20180820 15:40:31.847 - INFO - ${False} = False
+20180820 15:40:31.847 - INFO - &{fxmsymx} = { scope={'BOTTOM': 1, 'LEFT': 1, 'RIGHT': 0, 'TOP': 3} | add_cols=[{'COL': 1, 'COL_NAME': '月份', 'CONTENT': '${月份}'}, {'COL': 14, 'COL_NAME': '口径', 'CONTENT': '${口径}'}] | sheetname=非项目-${口径} | 源文件=${workdir}/${月份}/${名称}-${月份}.xls | 目标文件=${workdir}/部门损益明细表-整理后-${月份}.xls }
+20180820 15:40:31.848 - INFO - ${LOG_FILE} = G:\Software\Develop\Robotframework\SeleniumLibrary-3.1.1\study\log\log.html
+20180820 15:40:31.848 - INFO - ${LOG_LEVEL} = INFO
+20180820 15:40:31.848 - INFO - ${None} = None
+20180820 15:40:31.848 - INFO - ${null} = None
+20180820 15:40:31.848 - INFO - ${OUTPUT_DIR} = G:\Software\Develop\Robotframework\SeleniumLibrary-3.1.1\study\log
+20180820 15:40:31.848 - INFO - ${OUTPUT_FILE} = G:\Software\Develop\Robotframework\SeleniumLibrary-3.1.1\study\log\output.xml
+20180820 15:40:31.848 - INFO - ${PREV_TEST_MESSAGE} =
+20180820 15:40:31.848 - INFO - ${PREV_TEST_NAME} =
+20180820 15:40:31.848 - INFO - ${PREV_TEST_STATUS} =
+20180820 15:40:31.848 - INFO - ${REPORT_FILE} = G:\Software\Develop\Robotframework\SeleniumLibrary-3.1.1\study\log\report.html
+20180820 15:40:31.848 - INFO - &{request} = { scope={'BOTTOM': '1', 'LEFT': '1', 'RIGHT': '0', 'TOP': '3'} | add_cols={'cols': [{'COL': '1', 'COL_NAME': '月份', 'CONTENT': '201806'}, {'COL': '35', 'COL_NAME': '口径', 'CONTENT': '考核口径'}]} | sheetname=项目-考核口径 | 源文件=X:/Temp/201806/部门损益明细表【项目】-完工百分比法-考核口径-201806.xls | 目标文件=X:/Temp/部门损益明细表-整理后-201806.xls }
+20180820 15:40:31.848 - INFO - &{scope} = { BOTTOM=1 | LEFT=1 | RIGHT=0 | TOP=3 }
+20180820 15:40:31.848 - INFO - ${sheetname} = 项目-考核口径
+20180820 15:40:31.848 - INFO - ${SPACE} =
+20180820 15:40:31.848 - INFO - ${SUITE_DOCUMENTATION} = 测试yaml变量文件，dict中包括list
+作为配置信息
+20180820 15:40:31.848 - INFO - &{SUITE_METADATA} = { }
+20180820 15:40:31.848 - INFO - ${SUITE_NAME} = Test Yaml
+20180820 15:40:31.848 - INFO - ${SUITE_SOURCE} = G:\Software\Develop\Robotframework\SeleniumLibrary-3.1.1\study\test_yaml.robot
+20180820 15:40:31.848 - INFO - ${TEMPDIR} = X:\TEMP
+20180820 15:40:31.848 - INFO - ${TEST_DOCUMENTATION} =
+20180820 15:40:31.848 - INFO - ${TEST_NAME} = 验证yaml文件
+20180820 15:40:31.848 - INFO - @{TEST_TAGS} = [ ]
+20180820 15:40:31.848 - INFO - ${True} = True
+20180820 15:40:31.848 - INFO - ${workdir} = X:/Temp
+20180820 15:40:31.849 - INFO - &{xmrymx} = { scope={'BOTTOM': 2, 'LEFT': 0, 'RIGHT': 0, 'TOP': 2} | add_cols=[{'COL': 1, 'COL_NAME': '月份', 'CONTENT': '${月份}'}] | sheetname=${月份} | 源文件=${workdir}/${月份}/${名称}-${月份}.xls | 目标文件=${workdir}/${名称}-整理后.xls }
+20180820 15:40:31.849 - INFO - &{xmsymx} = { scope={'BOTTOM': 1, 'LEFT': 1, 'RIGHT': 0, 'TOP': 3} | add_cols=[{'COL': 1, 'COL_NAME': '月份', 'CONTENT': '${月份}'}, {'COL': 35, 'COL_NAME': '口径', 'CONTENT': '${口径}'}] | sheetname=项目-${口径} | 源文件=${workdir}/${月份}/${名称}-${口径}-${月份}.xls | 目标文件=${workdir}/部门损益明细表-整理后-${月份}.xls }
+20180820 15:40:31.849 - INFO - @{口径} = [ 考核口径 | 管理口径 ]
+20180820 15:40:31.849 - INFO - ${名称} = 部门损益明细表【项目】-完工百分比法
+20180820 15:40:31.849 - INFO - @{月份} = [ 201806 | 201807 ]
+20180820 15:40:31.849 - INFO - ${源文件} = X:/Temp/201806/部门损益明细表【项目】-完工百分比法-考核口径-201806.xls
+20180820 15:40:31.849 - INFO - ${目标文件} = X:/Temp/部门损益明细表-整理后-201806.xls
+20180820 15:40:31.850 - INFO - +-- END KW: BuiltIn.Log Variables (3)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20180820 15:40:31.850 - INFO - +-- START KW: BuiltIn.Log Many [ ${xmsymx} ]
+20180820 15:40:31.850 - INFO - {'scope': {'BOTTOM': 1, 'LEFT': 1, 'RIGHT': 0, 'TOP': 3}, 'add_cols': [{'COL': 1, 'COL_NAME': '月份', 'CONTENT': '${月份}'}, {'COL': 35, 'COL_NAME': '口径', 'CONTENT': '${口径}'}], 'sheetname': '项目-${口径}', '源文件': '${workdir}/${月份}/${名称}-${口径}-${月份}.xls', '目标文件': '${workdir}/部门损益明细表-整理后-${月份}.xls'}
+20180820 15:40:31.851 - INFO - +-- END KW: BuiltIn.Log Many (0)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20180820 15:40:31.851 - INFO - +-- START KW: BuiltIn.Log Many [ ${fxmsymx} ]
+20180820 15:40:31.851 - INFO - {'scope': {'BOTTOM': 1, 'LEFT': 1, 'RIGHT': 0, 'TOP': 3}, 'add_cols': [{'COL': 1, 'COL_NAME': '月份', 'CONTENT': '${月份}'}, {'COL': 14, 'COL_NAME': '口径', 'CONTENT': '${口径}'}], 'sheetname': '非项目-${口径}', '源文件': '${workdir}/${月份}/${名称}-${月份}.xls', '目标文件': '${workdir}/部门损益明细表-整理后-${月份}.xls'}
+20180820 15:40:31.852 - INFO - +-- END KW: BuiltIn.Log Many (0)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20180820 15:40:31.852 - INFO - +-- START KW: BuiltIn.Log Many [ ${xmrymx} ]
+20180820 15:40:31.852 - INFO - {'scope': {'BOTTOM': 2, 'LEFT': 0, 'RIGHT': 0, 'TOP': 2}, 'add_cols': [{'COL': 1, 'COL_NAME': '月份', 'CONTENT': '${月份}'}], 'sheetname': '${月份}', '源文件': '${workdir}/${月份}/${名称}-${月份}.xls', '目标文件': '${workdir}/${名称}-整理后.xls'}
+20180820 15:40:31.852 - INFO - +-- END KW: BuiltIn.Log Many (0)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20180820 15:40:31.853 - INFO - +-- START KW: BuiltIn.Log Many [ ${request} ]
+20180820 15:40:31.853 - INFO - {'scope': {'BOTTOM': '1', 'LEFT': '1', 'RIGHT': '0', 'TOP': '3'}, 'add_cols': {'cols': [{'COL': '1', 'COL_NAME': '月份', 'CONTENT': '201806'}, {'COL': '35', 'COL_NAME': '口径', 'CONTENT': '考核口径'}]}, 'sheetname': '项目-考核口径', '源文件': 'X:/Temp/201806/部门损益明细表【项目】-完工百分比法-考核口径-201806.xls', '目标文件': 'X:/Temp/部门损益明细表-整理后-201806.xls'}
+20180820 15:40:31.853 - INFO - +-- END KW: BuiltIn.Log Many (1)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20180820 15:40:31.853 - INFO - +-- START KW: BuiltIn.Log Many [ ${workdir} ]
+20180820 15:40:31.853 - INFO - X:/Temp
+20180820 15:40:31.854 - INFO - +-- END KW: BuiltIn.Log Many (0)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20180820 15:40:31.854 - INFO - +-- START KW: BuiltIn.Log Many [ ${request.scope.TOP} ]
+20180820 15:40:31.854 - INFO - 3
+20180820 15:40:31.854 - INFO - +-- END KW: BuiltIn.Log Many (0)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+20180820 15:40:31.855 - INFO - +-- START KW: BuiltIn.Log Many [ ${request.add_cols} ]
+20180820 15:40:31.855 - INFO - {'cols': [{'COL': '1', 'COL_NAME': '月份', 'CONTENT': '201806'}, {'COL': '35', 'COL_NAME': '口径', 'CONTENT': '考核口径'}]}
+20180820 15:40:31.855 - INFO - +-- END KW: BuiltIn.Log Many (0)
+------------------------------------------------------------------------------
+20180820 15:40:31.860 - INFO - +- END TEST: 验证yaml文件 (10)
+------------------------------------------------------------------------------
+20180820 15:40:31.868 - INFO - + END SUITE: Test Yaml (58)
+==============================================================================
