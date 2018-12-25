@@ -104,8 +104,8 @@ if __name__ == "__main__":
     argv1=[]
     argv2=[]
     if(len(sys.argv) == 1):
-        argv1 += [sys.argv[0]] + ["-f"] + ["成本明细表【非项目-不立项】.xls"] + ["-s"] + [""] + ['-b'] + ['部门列表.xls'] + ['-t'] + ['201811'] + ['-o'] + ['非项目损益明细表.xlsx']
-        argv2 += [sys.argv[0]] + ["-f"] + ["成本明细表【非项目-立项】.xls"] + ['-b'] + ['部门列表.xls'] + ['-t'] + ['201811'] + ['-o'] + ['非项目损益明细表.xlsx']
+        argv1 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/成本明细表【非项目-不立项】.xls"] + ["-s"] + [""] + ['-b'] + ['F:/workspace/python/data/201811/部门列表.xls'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/非项目损益明细表.xlsx']
+        argv2 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/成本明细表【非项目-立项】.xls"] + ['-b'] + ['F:/workspace/python/data/201811/部门列表.xls'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/非项目损益明细表.xlsx']
     else:
         argv1=sys.argv
 

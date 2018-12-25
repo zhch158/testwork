@@ -68,9 +68,9 @@ if __name__ == "__main__":
     argv2=[]
     argv3=[]
     if(len(sys.argv) == 1):
-        argv1 += [sys.argv[0]] + ["-f"] + ["部门损益明细表【项目】.xls"] + ['-d'] + ['验收口径'] + ['-t'] + ['201811'] + ['-o'] + ['项目损益明细表.xlsx']
-        argv2 += [sys.argv[0]] + ["-f"] + ["部门损益明细表【项目】-完工百分比法-管理口径.xls"] + ['-d'] + ['管理口径'] + ['-t'] + ['201811'] + ['-o'] + ['项目损益明细表.xlsx']
-        argv3 += [sys.argv[0]] + ["-f"] + ["部门损益明细表【项目】-完工百分比法-考核口径.xls"] + ['-d'] + ['考核口径'] + ['-t'] + ['201811'] + ['-o'] + ['项目损益明细表.xlsx']
+        argv1 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/部门损益明细表【项目】.xls"] + ['-d'] + ['验收口径'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/项目损益明细表.xlsx']
+        argv2 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/部门损益明细表【项目】-完工百分比法-管理口径.xls"] + ['-d'] + ['管理口径'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/项目损益明细表.xlsx']
+        argv3 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/部门损益明细表【项目】-完工百分比法-考核口径.xls"] + ['-d'] + ['考核口径'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/项目损益明细表.xlsx']
     else:
         argv1=sys.argv
 

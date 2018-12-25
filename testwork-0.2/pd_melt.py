@@ -67,7 +67,7 @@ def get_opts(argv):
 if __name__ == "__main__":
     # 测试用
     if(len(sys.argv) == 1):
-        sys.argv += ["-f"] + ["pp-20181220.xlsx"] + ["-s"] + ["PP"] + ['-o'] + ['pp.xlsx']
+        sys.argv += ["-f"] + ["F:/workspace/python/data/201811/pp-20181220.xlsx"] + ["-s"] + ["PP"] + ['-o'] + ['F:/workspace/python/data/201811/pp.xlsx']
     print("CMD:[%s]\n" % (sys.argv))
 
     xls_file, xls_sheet, o_file = get_opts(sys.argv)
