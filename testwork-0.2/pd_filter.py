@@ -4,9 +4,9 @@ import sys
 import getopt
 import pandas as pd
 
-def pd_filter(xls_file, xls_sheet=0, xls_branch='部门列表.xls', yyyymm='201801', o_file="result.xlsx", o_sheet='立项'):
+def pd_filter(xls_file, xls_sheet=0, xls_branch='部门列表.xls', yyyymm='201801', o_file="result.xlsx", o_sheet='立项', skiprows=2):
     level1=level2=level3=level4=''
-    data=pd.read_excel(xls_file, sheet_name=xls_sheet, skiprows=2, skipfooter=0)
+    data=pd.read_excel(xls_file, sheet_name=xls_sheet, skiprows=skiprows, skipfooter=0)
     df=pd.DataFrame(data).loc[:, ['项目类型', '实施部门', '项目编号', '项目名称', '项目状态', '成本分类', '总成本']]
     print("file[%s], rows[%d], cols[%d]" %(xls_file, df.iloc[:,0].size, df.columns.size))
 
@@ -112,10 +112,10 @@ if __name__ == "__main__":
     print("CMD:[%s]\n" % (argv1))
     xls_file, xls_sheet, xls_branch, yyyymm, o_file = get_opts(argv1)
     writer = pd.ExcelWriter(o_file)
-    pd_filter(xls_file, xls_sheet, xls_branch, yyyymm, writer, '不立项')
+    pd_filter(xls_file, xls_sheet, xls_branch, yyyymm, writer, '不立项', 2)
 
     print("CMD:[%s]\n" % (argv2))
     xls_file, xls_sheet, xls_branch, yyyymm, o_file = get_opts(argv2)
-    pd_filter(xls_file, xls_sheet, xls_branch, yyyymm, writer, '立项')
+    pd_filter(xls_file, xls_sheet, xls_branch, yyyymm, writer, '立项', 2)
 
     writer.save()
