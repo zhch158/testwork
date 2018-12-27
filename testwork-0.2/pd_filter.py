@@ -28,12 +28,14 @@ def pd_filter(xls_file, xls_sheet=0, xls_branch='部门列表.xls', yyyymm='2018
                 cost=row['总成本']
             else:
                 cost=row_0['总成本']
-            branch_row=branch.loc[branch['部门']==row_0['实施部门']]
+            branch_row=branch.loc[branch['部门名称']==row_0['实施部门']]
             if(branch_row.size==0):
-                level1=level2=level3=level4=''
-                print('部门[%s] 部门列表中不存在' %(row_0['实施部门']))
+                level1='北京宇信科技本级'
+                level2=level3=level4=pd.np.nan
+                print('部门[%s] 部门列表中不存在, 取默认值[%s]' %(row_0['实施部门'], level1))
             else:
-                level1, level2, level3, level4=branch_row.values[0][1:5]
+                level1, level2, level3, level4=branch_row[['lev2_name', 'lev3_name', 'lev4_name', 'lev5_name']].values[0][0:4]
+                # level1=branch_row['lev2_name'].values[0]
             res_df.loc[i]=[yyyymm, row_0['项目类型'], row_0['项目编号'], row_0['项目名称'], row_0['项目状态'], 
                 level1, level2, level3, level4, cost, cost, '考核口径']
             # res_row=pd.Series(['201811', row_0['项目类型'], row_0['项目编号'], row_0['项目名称'], row_0['项目状态'], level1, level2, level3, level4, row['总成本'], row['总成本'], '考核口径'])
@@ -104,8 +106,8 @@ if __name__ == "__main__":
     argv1=[]
     argv2=[]
     if(len(sys.argv) == 1):
-        argv1 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/成本明细表【非项目-不立项】.xls"] + ["-s"] + [""] + ['-b'] + ['F:/workspace/python/data/201811/部门列表.xls'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/非项目损益明细表.xlsx']
-        argv2 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/成本明细表【非项目-立项】.xls"] + ['-b'] + ['F:/workspace/python/data/201811/部门列表.xls'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/非项目损益明细表.xlsx']
+        argv1 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/成本明细表【非项目-不立项】.xls"] + ["-s"] + [""] + ['-b'] + ['F:/workspace/python/data/201811/部门列表-201812.xlsx'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/非项目损益明细表.xlsx']
+        argv2 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/成本明细表【非项目-立项】.xls"] + ['-b'] + ['F:/workspace/python/data/201811/部门列表-201812.xlsx'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/非项目损益明细表.xlsx']
     else:
         argv1=sys.argv
 

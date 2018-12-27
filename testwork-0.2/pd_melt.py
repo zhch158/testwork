@@ -22,8 +22,9 @@ def pd_melt(xls_file, xls_sheet=None, o_file="pp.xlsx"):
     data=pd.read_excel(xls_file, sheet_name=xls_sheet)
     df=pd.DataFrame(data)
     result=pd.melt(df, id_vars=['项目编号', '项目名称'], var_name='产品名称', value_name='产品分摊比例')
+    # o_data['调整说明']=''
+    result['调整说明']=pd.np.nan
     o_data=result.loc[result['产品分摊比例']>=0]
-    o_data['调整说明']=''
     o_data.to_excel(o_file, encoding='utf-8', index=False, header=True)
 
 def print_usage(argv):
