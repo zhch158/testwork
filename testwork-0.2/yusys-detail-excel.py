@@ -1,12 +1,15 @@
 #coding=utf-8   //这句是使用utf8编码方式方法， 可以单独加入python头使用
 import os,sys,getopt
 import pandas as pd
+import yaml
 sys.path.extend([".", "../pylib"])
 from utility import load_from_yaml
 from pd_melt import pd_melt
 from pd_filter import pd_filter
 from pd_modify import pd_modify
 from pd_branch import pd_branch
+
+from jinja2 import Environment, FileSystemLoader, Template
 
 def print_usage(argv):
     print("Usage: ", argv[0])
@@ -57,22 +60,25 @@ if __name__ == "__main__":
         workdir=config.get("workdir", './')
     else:
         workdir='./'
+    config['workdir']=workdir
+    
+    TemplateLoader = FileSystemLoader(searchpath=['.'])
+    env = Environment(loader=TemplateLoader, variable_start_string='${', variable_end_string='}')
+    md01 = env.get_template(configfile)
+    content = md01.render(config)
+    config_dic = yaml.load(content)
 
     pp_dict=config_dic.get("产品归属", None)
     if(pp_dict!=None):
         pp_input, pp_input_sheet=pp_dict.get("输入文件", None)
-        pp_input=workdir+'/'+pp_input
         pp_output=pp_dict.get("输出文件", None)
-        pp_output=workdir+'/'+pp_output
         print('pd_melt(xls_file=%s, xls_sheet=%s, o_file=%s)' %(pp_input, pp_input_sheet, pp_output))
         pd_melt(pp_input, pp_input_sheet, pp_output)
     
     b_dict=config_dic.get("部门列表", None)
     if(b_dict!=None):
         b_input=b_dict.get("输入文件", None)
-        b_input=workdir+'/'+b_input
         b_output=b_dict.get("输出文件", None)
-        b_output=workdir+'/'+b_output
         print('pd_branch(xls_file=%s, o_file=%s)' %(b_input, b_output))
         pd_branch(xls_file=b_input, o_file=b_output)
     
@@ -80,11 +86,9 @@ if __name__ == "__main__":
     if(xm_dict!=None):
         xm_list=xm_dict.get("输入文件", None)
         xm_output=xm_dict.get("输出文件", None)
-        xm_output=workdir+'/'+xm_output
         xm_yyyymm=xm_dict.get("月份", None)
         writer = pd.ExcelWriter(xm_output)
         for xm_input, methods, skiprows in xm_list:
-            xm_input=workdir+'/'+xm_input
             print("pd_mdify(xls_file=%s, methods=%s, yyyymm=%s, o_file=%s, skiprows=%d)" 
                 %(xm_input, methods, xm_yyyymm, xm_output, skiprows))
             pd_modify(xls_file=xm_input, methods=methods, yyyymm=xm_yyyymm, o_file=writer, skiprows=skiprows)
@@ -94,13 +98,10 @@ if __name__ == "__main__":
     if(fxm_dict!=None):
         fxm_list=fxm_dict.get("输入文件", None)
         fxm_output=fxm_dict.get("输出文件", None)
-        fxm_output=workdir+'/'+fxm_output
         fxm_branch=fxm_dict.get("部门列表", None)
-        fxm_branch=workdir+'/'+fxm_branch
         fxm_yyyymm=fxm_dict.get("月份", None)
         writer = pd.ExcelWriter(fxm_output)
         for fxm_input, o_sheet, skiprows in fxm_list:
-            fxm_input=workdir+'/'+fxm_input
             print('pd_mdify(xls_file=%s, xls_branch=%s, yyyymm=%s, o_file=%s, o_sheet=%s, skiprows=%d)' 
                 %(fxm_input, fxm_branch, fxm_yyyymm, fxm_output, o_sheet, skiprows))
             pd_filter(xls_file=fxm_input, xls_branch=fxm_branch, yyyymm=fxm_yyyymm, o_file=writer, o_sheet=o_sheet, skiprows=skiprows)
