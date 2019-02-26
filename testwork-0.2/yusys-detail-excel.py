@@ -8,6 +8,8 @@ from pd_melt import pd_melt
 from pd_filter import pd_filter
 from pd_modify import pd_modify
 from pd_branch import pd_branch
+import pd_cost
+# from pd_cost import pd_direct_cost, pd_manage_cost, pd_idle_cost
 
 from jinja2 import Environment, FileSystemLoader, Template
 
@@ -105,5 +107,21 @@ if __name__ == "__main__":
             print('pd_mdify(xls_file=%s, xls_branch=%s, yyyymm=%s, o_file=%s, o_sheet=%s, skiprows=%d)' 
                 %(fxm_input, fxm_branch, fxm_yyyymm, fxm_output, o_sheet, skiprows))
             pd_filter(xls_file=fxm_input, xls_branch=fxm_branch, yyyymm=fxm_yyyymm, o_file=writer, o_sheet=o_sheet, skiprows=skiprows)
+        writer.save()
+    
+    fxm_dict=config_dic.get("非项目费用", None)
+    if(fxm_dict!=None):
+        fxm_list=fxm_dict.get("输入文件", None)
+        fxm_output=fxm_dict.get("输出文件", None)
+        fxm_yyyymm=fxm_dict.get("月份", None)
+        writer = pd.ExcelWriter(fxm_output)
+        for fxm_func, fxm_input, o_sheet, skiprows in fxm_list:
+            print('pd_mdify(func=%s, xls_file=%s, yyyymm=%s, o_file=%s, o_sheet=%s, skiprows=%d)' 
+                %(fxm_func, fxm_input, fxm_yyyymm, fxm_output, o_sheet, skiprows))
+            func=getattr(pd_cost, fxm_func, None)
+            if(func==None):
+                print('Func{%s] is not found' %(fxm_func))
+                continue
+            func(xls_file=fxm_input, yyyymm=fxm_yyyymm, o_file=writer, o_sheet=o_sheet, skiprows=skiprows)
         writer.save()
     
