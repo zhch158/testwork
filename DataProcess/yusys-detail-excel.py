@@ -9,6 +9,7 @@ from pd_filter import pd_filter
 from pd_modify import pd_modify
 from pd_branch import pd_branch
 import pd_cost
+import pd_workload
 # from pd_cost import pd_direct_cost, pd_manage_cost, pd_idle_cost
 
 from jinja2 import Environment, FileSystemLoader, Template
@@ -123,5 +124,21 @@ if __name__ == "__main__":
                 print('Func{%s] is not found' %(fxm_func))
                 continue
             func(xls_file=fxm_input, yyyymm=fxm_yyyymm, o_file=writer, o_sheet=o_sheet, skiprows=skiprows)
+        writer.save()
+    
+    workload_dict=config_dic.get("项目人工投入", None)
+    if(workload_dict!=None):
+        workload_list=workload_dict.get("输入文件", None)
+        workload_output=workload_dict.get("输出文件", None)
+        workload_yyyymm=workload_dict.get("月份", None)
+        writer = pd.ExcelWriter(workload_output)
+        for workload_func, workload_input, skiprows in workload_list:
+            print('pd_mdify(func=%s, xls_file=%s, yyyymm=%s, o_file=%s, skiprows=%d)' 
+                %(workload_func, workload_input, workload_yyyymm, workload_output, skiprows))
+            func=getattr(pd_workload, workload_func, None)
+            if(func==None):
+                print('Func{%s] is not found' %(workload_func))
+                continue
+            func(xls_file=workload_input, yyyymm=workload_yyyymm, o_file=writer, skiprows=skiprows)
         writer.save()
     

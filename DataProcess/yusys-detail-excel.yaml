@@ -31,11 +31,18 @@ config:
 #     部门列表: ${workdir}/部门列表-${yyyymm}.xlsx
 #     月份: ${yyyymm}
 
-非项目费用:
+# 非项目费用:
+#     输入文件:
+#         #- [方法名, 文件名, 输出SHEET名称前缀, 跳过行数]
+#         - ["pd_direct_cost", "${workdir}/售前、内部管理、产品研发预实对比明细表.xls", "售前、内部管理、产品研发", 2]
+#         - ["pd_manage_cost", "${workdir}/部门管理预实对比汇总表.xls", "部门管理", 2]
+#         - ["pd_idle_cost", "${workdir}/部门闲置预实对比汇总表.xls", "部门闲置", 2]
+#     输出文件: ${workdir}/非项目损益明细表-${yyyymm}.xlsx
+#     月份: ${yyyymm}
+
+项目人工投入:
     输入文件:
-        #- [方法名, 文件名, 输出SHEET名称前缀, 跳过行数]
-        - ["pd_direct_cost", "${workdir}/售前、内部管理、产品研发预实对比明细表.xls", "售前、内部管理、产品研发", 2]
-        - ["pd_manage_cost", "${workdir}/部门管理预实对比汇总表.xls", "部门管理", 2]
-        - ["pd_idle_cost", "${workdir}/部门闲置预实对比汇总表.xls", "部门闲置", 2]
-    输出文件: ${workdir}/非项目损益明细表-${yyyymm}.xlsx
+        #- [方法名, 文件名, 跳过行数]
+        - ["pd_workload", "${workdir}/项目人工投入统计表(按人员-项目).xls", 2]
+    输出文件: ${workdir}/项目人工投入统计表(按人员-项目)-${yyyymm}.xlsx
     月份: ${yyyymm}
