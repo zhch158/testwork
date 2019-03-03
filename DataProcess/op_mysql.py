@@ -8,12 +8,16 @@ def get_db_conf(configfile, dbtype='mysql'):
     #从文件系统读取配置文件
     cf = configparser.ConfigParser()
     cf.read(configfile)
-    host = cf.get(dbtype, "host")
-    port = cf.get(dbtype, "port")
-    user = cf.get(dbtype, "user")
-    pwd = cf.get(dbtype, "password")
-    db = cf.get(dbtype, "database")
-    db_params={'host':host, 'port':port, 'username':user, 'password':pwd, 'database':db}
+    # host = cf.get(dbtype, "host")
+    # port = cf.get(dbtype, "port")
+    # user = cf.get(dbtype, "user")
+    # pwd = cf.get(dbtype, "password")
+    # db = cf.get(dbtype, "database")
+    # db_params={'host':host, 'port':port, 'user':user, 'password':pwd, 'database':db}
+    params=cf.items(dbtype)
+    db_params={}
+    for key, value in params:
+        db_params[key]=value
     return db_params
 
 class Mysql:
@@ -21,10 +25,10 @@ class Mysql:
 
     # cursorclass = pymysql.cursors.DictCursor
     def __init__(self, host="127.0.0.1", port="3306", 
-        username="root", password="root", database="test", charset='utf8', cursorclass = pymysql.cursors.Cursor):
+        user="root", password="root", database="test", charset='utf8', cursorclass = pymysql.cursors.Cursor):
         '''类例化，处理一些连接操作'''
         self.host = host
-        self.username = username
+        self.user = user
         self.password = password
         self.database = database
         self.port = int(port)
@@ -35,7 +39,7 @@ class Mysql:
         self.con = None
         # connect to mysql
         try:
-            self.con = pymysql.connect(host = self.host, user = self.username, password = self.password, port = self.port, 
+            self.con = pymysql.connect(host = self.host, user = self.user, password = self.password, port = self.port, 
                 database = self.database, charset=self.charset, cursorclass = self.cursorclass)
             self.cur = self.con.cursor()
         except Exception as e:
@@ -57,6 +61,8 @@ class Mysql:
         try:
             self.cur.execute(sql_str, args)
             rows = self.cur.fetchall()
+            if(len(rows)>0 and isinstance(rows[0], dict)):
+                return rows
             column_names=[]
             for col in self.cur.description:
                 column_names.append(col[0])
@@ -87,9 +93,10 @@ class Mysql:
         '''
         try:
             num=self.cur.execute(sql, args)
-            self.con.commit()
+            # self.con.commit()
             return num
         except Exception as e:
+            # self.con.rollback()
             print(e)
             raise e
  
@@ -101,33 +108,44 @@ class Mysql:
                     self.cur.close()
                 if(type(self.con)=='object'):
                     self.con.close()
-            except:
+            except Exception as e:
+                print(e)
                 raise("关闭异常, %s,%s" % (type(self.cur), type(self.con)))  
  
     #获取连接信息
     def get_connect_info(self):
         print( "连接信息：" )
-        print( "服务器:%s , 用户名:%s , 数据库:%s " % (self.host,self.username,self.database))
+        print( "服务器:%s , 用户名:%s , 数据库:%s " % (self.host,self.user,self.database))
+    
+    def commit(self):
+        self.con.commit()
+ 
+    def rollback(self):
+        self.con.rollback()
  
 if __name__ == "__main__":
     #从文件系统读取配置文件
     db_params=get_db_conf('database.ini')
 
     mydb = Mysql(**db_params)
-    # mydb = Mysql(db_params, cursorclass='pymysql.cursors.DictCursor')
-    #创建表
-    mydb.create_table('create table user (id varchar(20) primary key, name varchar(20))')
-    #插入数据
-    # mydb.execute_sql("insert into user (id, name) values  ('1', 'Michael')")
-    # 查询数据表
-    results = mydb.select_sql("SELECT * FROM user")
-    print(results)
-    for row in results:
-        id = row[0]
-        name = row[1]
-        print("id=%s,name=%s" %(id, name))
-    list = mydb.select_sql_dict("SELECT * FROM user")
-    for i in list:
-        print ("记录号：%s   值：%s" % (list.index(i) + 1, i))
+    try:
+        # mydb = Mysql(**db_params, cursorclass=pymysql.cursors.DictCursor)
+        #创建表
+        # mydb.create_table('create table user (id varchar(20) primary key, name varchar(20))')
+        #插入数据
+        # mydb.execute_sql("insert into user (id, name) values  ('1', 'Michael')")
+        # 查询数据表
+        results = mydb.select_sql("SELECT * FROM 国有大行客户名称")
+        print(results)
+        for row in results:
+            print("row=%s" %(str(row)))
+        list = mydb.select_sql_dict("SELECT * FROM 国有大行客户名称")
+        for i in list:
+            print ("记录号：%s   值：%s" % (list.index(i) + 1, i))
+        
+        mydb.commit()
+    except:
+        mydb.rollback()
+
     #关闭数据库
     mydb.close()
