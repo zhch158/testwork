@@ -3,6 +3,7 @@ import sys
 import pymysql
 # import mysql.connector
 import configparser
+from sqlalchemy import create_engine
 
 def get_db_conf(configfile, dbtype='mysql'):
     #从文件系统读取配置文件
@@ -20,10 +21,32 @@ def get_db_conf(configfile, dbtype='mysql'):
         db_params[key]=value
     return db_params
 
+class PdMysql:
+    def __init__(self, host="127.0.0.1", port="3306", 
+        user="root", password="root", database="test", charset='utf8'):
+        '''类例化，处理一些连接操作'''
+        self.host = host
+        self.user = user
+        self.password = password
+        self.database = database
+        self.port = int(port)
+        self.charset=charset
+
+        # connect_info = 'mysql+pymysql://username:passwd@host:3306/dbname?charset=utf8'
+        connect_info = 'mysql+pymysql://{user}:{password}@{host}:{port}/{database}?charset={charset}'.format(user=self.user, password=self.password, host=self.host, port=self.port, database=self.database, charset=self.charset)
+
+        try:
+            engine = create_engine(connect_info) #use sqlalchemy to build link-engine
+            self.engine = engine
+        except Exception as e:
+            print('connect error [%s]' %e)
+            raise("DataBase connect error,please check the db config")  
+
 class Mysql:
     # def __init__(self):
 
     # cursorclass = pymysql.cursors.DictCursor
+    # 当mysql数据量很大时，可以使用用流式游标,在Python中,你可以使用pymysql.cursors.SSCursor(或者SSDictCursor)来解决这个问题
     def __init__(self, host="127.0.0.1", port="3306", 
         user="root", password="root", database="test", charset='utf8', cursorclass = pymysql.cursors.Cursor):
         '''类例化，处理一些连接操作'''
