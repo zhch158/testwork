@@ -3,7 +3,7 @@ import os
 import sys
 import argparse
 import pandas as pd
-from op_mysql import Mysql, PdMysql, get_db_conf
+from op_mysql import PdMysql, get_db_conf
 
 # 项目人工投入统计表(按人员-项目)-201812.xlsx
 def sync_table(engine, tablename='RY_YCOMS', xls_file='项目人工投入统计表.xlsx', xls_sheet=0, yyyymm='201812'):
@@ -49,4 +49,9 @@ if __name__ == "__main__":
     db_params=get_db_conf('database.ini')
     pdConn = PdMysql(**db_params)
     # mydb = Mysql(**db_params)
-    sync_table(pdConn.engine, args.tablename, args.inputfile, yyyymm=args.yyyymm)
+    func=globals().get('sync_table')
+    if(func!=None):
+        func(pdConn.engine, args.tablename, args.inputfile, yyyymm=args.yyyymm)
+    else:
+        raise("find function[{}] error".format('sync_table'))  
+

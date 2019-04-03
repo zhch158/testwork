@@ -1,10 +1,11 @@
 # coding=utf-8   //这句是使用utf8编码方式方法， 可以单独加入python头使用
 import os
 import sys
-import getopt
+import argparse
 import pandas as pd
+from op_mysql import PdMysql, get_db_conf
 
-def pd_branch(xls_file, xls_sheet=0, o_file="branch.xlsx"):
+def pd_branch_fromfile(xls_file, xls_sheet=0, o_file="branch.xlsx"):
     lev=lev1=lev2=lev3=lev4=lev5=''
     lev1_name=lev2_name=lev3_name=lev4_name=lev5_name=''
     data=pd.read_excel(xls_file, sheet_name=xls_sheet)
@@ -71,54 +72,44 @@ def pd_branch(xls_file, xls_sheet=0, o_file="branch.xlsx"):
     
     out_df.to_excel(o_file, encoding='utf-8', sheet_name='部门列表', index=False, header=True)
 
-def print_usage(argv):
-    print("Usage: ", argv[0])
-    print("\t-h --help")
-    print("\t-f --filename <execl filename>")
-    print("\t-s --sheetname <execl sheetname>")
-    print("\t-o --output <output filename>")
+def pd_branch(engine, o_file="branch.xlsx"):
+    sql_content="SELECT distinct IFNULL(t.项目所属部门级四, ifnull(t.项目所属部门级三, ifnull(t.项目所属部门级二, t.项目所属部门级一))) as '部门名称',	'北京宇信科技集团股份有限公司' as lev1_name, t.项目所属部门级一 as lev2_name, t.项目所属部门级二 as lev3_name, t.项目所属部门级三 as lev4_name, t.项目所属部门级四 as lev5_name FROM RY_YCOMS t order by 2,3,4,5"
+    df=pd.read_sql(sql_content, engine)
+    print("table[%s], rows[%d], cols[%d]" %('RY_YCOMS', df.iloc[:,0].size, df.columns.size))
+    df.to_excel(o_file, encoding='utf-8', sheet_name='部门列表', index=False, header=True)
 
-def get_opts(argv):
-    xls_file = ""
-    xls_sheet = ""
-    o_file = ""
+def pd_project(engine, o_file="project.xlsx"):
+    sql_content="SELECT distinct t.项目编号, t.项目名称, t.项目类型, t.项目所属部门级一, t.项目所属部门级二, t.项目所属部门级三, t.项目所属部门级四 FROM RY_YCOMS t WHERE t.项目名称 LIKE '%%部门管理' OR t.项目名称 LIKE '%%部门闲置' OR t.项目名称 LIKE '%%部门休假' order by 1"
+    df=pd.read_sql(sql_content, engine)
+    print("table[%s], rows[%d], cols[%d]" %('RY_YCOMS', df.iloc[:,0].size, df.columns.size))
+    df.loc[df['项目名称'].str.contains('.*部门管理'), '项目类型']= '部门管理'
+    df.loc[df['项目名称'].str.contains('.*部门闲置'), '项目类型']= '部门闲置'
+    df.loc[df['项目名称'].str.contains('.*部门休假'), '项目类型']= '部门休假'
+    df.to_excel(o_file, encoding='utf-8', sheet_name='管理、闲置、休假', index=False, header=True)
 
-    if(len(argv) == 1):
-        print_usage(argv)
-        sys.exit(1)
-
-    try:
-        opts, args = getopt.getopt(argv[1:], "hf:s:o:", [
-                                   "help", "filename=", "sheetname=", "output="])
-    except getopt.GetoptError:
-        print_usage(argv)
-        sys.exit(2)
-    for opt, arg in opts:
-        s = arg.strip()
-        if opt in ("-h", "--help"):
-            print_usage(argv)
-            sys.exit(1)
-        elif opt in ("-f", "--filename"):
-            xls_file = s
-        elif opt in ("-s", "--sheetname"):
-            xls_sheet = s
-        elif opt in ("-o", "--output"):
-            o_file = s
-    if(xls_file == "" or o_file==""):
-        print_usage(argv)
-        sys.exit(3)
-    if(xls_sheet == ""):
-        xls_sheet=0
-    return xls_file, xls_sheet, o_file
+parser=argparse.ArgumentParser(description='生成部门列表，日常管理、闲置项目清单')
+# parser.add_argument('integers', metavar='N', type=int, nargs='+', help='an integer for the accumulator')
+# parser.add_argument('--mode', '-m', dest='mode', nargs=1, choices=['sum', 'max'], required=True, help='input mode')
+# parser.add_argument('--sum', '-s', dest='accumulate', action='store_const', const=sum, default=max, help='sum the integers (default: find the max)')
+# parser.add_argument('--input', '-i', dest='inputfile', required=True, help='input excel file')
+parser.add_argument('--method', '-m', dest='method', required=True, help='选择调用方法', choices=['pd_branch', 'pd_project'])
+parser.add_argument('--output', '-o', dest='outputfile', required=True, help='output excel file')
 
 if __name__ == "__main__":
     # 测试用
-    argv1=[]
     if(len(sys.argv) == 1):
-        argv1 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/执行中组织结构基本信息表 20181225130600.xlsx"] + ['-o'] + ['F:/workspace/python/data/201811/部门列表-201812.xlsx']
+        parser.print_help()
+        # args=parser.parse_args('--input F:/workspace/python/data/201811/执行中组织结构基本信息表-20181225130600.xlsx --output F:/workspace/python/data/201811/部门列表-201812.xlsx -m pd_branch'.split())
+        # args=parser.parse_args('--output F:/workspace/python/data/201812/BRANCH-RY-201812.xlsx -m pd_branch'.split())
+        args=parser.parse_args('--output F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx -m pd_project'.split())
     else:
-        argv1=sys.argv
+        args=parser.parse_args()
 
-    print("CMD:[%s]\n" % (argv1))
-    xls_file, xls_sheet, o_file = get_opts(argv1)
-    pd_branch(xls_file, xls_sheet, o_file)
+    db_params=get_db_conf('database.ini')
+    pdConn = PdMysql(**db_params)
+    func=globals().get(args.method)
+    if(func!=None):
+        func(pdConn.engine, args.outputfile)
+    else:
+        raise("find function[{}] error".format(args.method))  
+

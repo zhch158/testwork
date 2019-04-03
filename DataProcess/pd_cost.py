@@ -22,6 +22,9 @@ def pd_direct_cost(xls_file, xls_sheet=0, yyyymm='201801', o_file="result.xlsx",
     res_df['所属部门级二']=df['所属二级部']
     res_df['累计总成本']=df['累计实际数']
     res_df['当年累计成本']=df['当年实际数']
+    res_df.loc[res_df['项目编号'].str.contains('.*-S'), '项目类型']= '售前项目'
+    res_df.loc[res_df['项目编号'].str.contains('.*-E'), '项目类型']= '内部管理'
+    res_df.loc[res_df['项目编号'].str.contains('.*-B'), '项目类型']= '产品研发'
 
     res_df['月份']=yyyymm
     res_df['口径']='考核口径'
