@@ -4,51 +4,52 @@ import sys
 import getopt
 import pandas as pd
 
-def pd_filter(xls_file, xls_sheet=0, xls_branch='部门列表.xls', yyyymm='201801', o_file="result.xlsx", o_sheet='立项', skiprows=2):
-    level1=level2=level3=level4=''
-    data=pd.read_excel(xls_file, sheet_name=xls_sheet, skiprows=skiprows, skipfooter=0)
-    df=pd.DataFrame(data).loc[:, ['项目类型', '实施部门', '项目编号', '项目名称', '项目状态', '成本分类', '总成本']]
-    print("file[%s], rows[%d], cols[%d]" %(xls_file, df.iloc[:,0].size, df.columns.size))
+#该文件目前已不使用
+# def pd_filter(xls_file, xls_sheet=0, xls_branch='部门列表.xls', yyyymm='201801', o_file="result.xlsx", o_sheet='立项', skiprows=2):
+#     level1=level2=level3=level4=''
+#     data=pd.read_excel(xls_file, sheet_name=xls_sheet, skiprows=skiprows, skipfooter=0)
+#     df=pd.DataFrame(data).loc[:, ['项目类型', '实施部门', '项目编号', '项目名称', '项目状态', '成本分类', '总成本']]
+#     print("file[%s], rows[%d], cols[%d]" %(xls_file, df.iloc[:,0].size, df.columns.size))
 
-    branch=pd.read_excel(xls_branch, sheet_name=0)
+#     branch=pd.read_excel(xls_branch, sheet_name=0)
 
-    res_df=pd.DataFrame(columns=['月份', '项目类型', '项目编号', '项目名称', '项目状态', '所属部门级一', '所属部门级二', '所属部门级三', '所属部门级四', '累计总成本', '当年累计成本', '口径'])
-    # sub_df0=df.loc[df['成本分类']=='本月累计']
-    # sub_df1=df.loc[df['成本分类']=='本年累计']
-    i=0
-    for index,row in df.iterrows():
-        # print(index)
-        # print(row)
-        if(index==0 or index == 1):
-            continue
-        if(index%2==0):
-            row_0=row
-        else:
-            if(row['成本分类']=='本年累计'):
-                cost=row['总成本']
-            else:
-                cost=row_0['总成本']
-            branch_row=branch.loc[branch['部门名称']==row_0['实施部门']]
-            if(branch_row.size==0):
-                level1='北京宇信科技本级'
-                level2=level3=level4=pd.np.nan
-                print('部门[%s] 部门列表中不存在, 取默认值[%s]' %(row_0['实施部门'], level1))
-            else:
-                level1, level2, level3, level4=branch_row[['lev2_name', 'lev3_name', 'lev4_name', 'lev5_name']].values[0][0:4]
-                # level1=branch_row['lev2_name'].values[0]
-            res_df.loc[i]=[yyyymm, row_0['项目类型'], row_0['项目编号'], row_0['项目名称'], row_0['项目状态'], 
-                level1, level2, level3, level4, cost, cost, '考核口径']
-            # res_row=pd.Series(['201811', row_0['项目类型'], row_0['项目编号'], row_0['项目名称'], row_0['项目状态'], level1, level2, level3, level4, row['总成本'], row['总成本'], '考核口径'])
-            # res_df.append(res_row, ignore_index=True)
-            i+=1
+#     res_df=pd.DataFrame(columns=['月份', '项目类型', '项目编号', '项目名称', '项目状态', '所属部门级一', '所属部门级二', '所属部门级三', '所属部门级四', '累计总成本', '当年累计成本', '口径'])
+#     # sub_df0=df.loc[df['成本分类']=='本月累计']
+#     # sub_df1=df.loc[df['成本分类']=='本年累计']
+#     i=0
+#     for index,row in df.iterrows():
+#         # print(index)
+#         # print(row)
+#         if(index==0 or index == 1):
+#             continue
+#         if(index%2==0):
+#             row_0=row
+#         else:
+#             if(row['成本分类']=='本年累计'):
+#                 cost=row['总成本']
+#             else:
+#                 cost=row_0['总成本']
+#             branch_row=branch.loc[branch['部门名称']==row_0['实施部门']]
+#             if(branch_row.size==0):
+#                 level1='北京宇信科技本级'
+#                 level2=level3=level4=pd.np.nan
+#                 print('部门[%s] 部门列表中不存在, 取默认值[%s]' %(row_0['实施部门'], level1))
+#             else:
+#                 level1, level2, level3, level4=branch_row[['lev2_name', 'lev3_name', 'lev4_name', 'lev5_name']].values[0][0:4]
+#                 # level1=branch_row['lev2_name'].values[0]
+#             res_df.loc[i]=[yyyymm, row_0['项目类型'], row_0['项目编号'], row_0['项目名称'], row_0['项目状态'], 
+#                 level1, level2, level3, level4, cost, cost, '考核口径']
+#             # res_row=pd.Series(['201811', row_0['项目类型'], row_0['项目编号'], row_0['项目名称'], row_0['项目状态'], level1, level2, level3, level4, row['总成本'], row['总成本'], '考核口径'])
+#             # res_df.append(res_row, ignore_index=True)
+#             i+=1
     
-    res_df.to_excel(o_file, encoding='utf-8', sheet_name=o_sheet+'-'+'考核', index=False, header=True)
+#     res_df.to_excel(o_file, encoding='utf-8', sheet_name=o_sheet+'-'+'考核', index=False, header=True)
 
-    res_df['口径']='管理口径'
-    res_df.to_excel(o_file, encoding='utf-8', sheet_name=o_sheet+'-'+'管理', index=False, header=True)
+#     res_df['口径']='管理口径'
+#     res_df.to_excel(o_file, encoding='utf-8', sheet_name=o_sheet+'-'+'管理', index=False, header=True)
 
-    res_df['口径']='验收口径'
-    res_df.to_excel(o_file, encoding='utf-8', sheet_name=o_sheet+'-'+'验收', index=False, header=True)
+#     res_df['口径']='验收口径'
+#     res_df.to_excel(o_file, encoding='utf-8', sheet_name=o_sheet+'-'+'验收', index=False, header=True)
 
     # o_data['调整说明']=''
     # o_data.to_excel(o_file, encoding='utf-8', index=False, header=True)
