@@ -1,4 +1,5 @@
 # coding=utf-8   //这句是使用utf8编码方式方法， 可以单独加入python头使用
+# 根据mysql数据库中RY_YCOMS中的考勤数据，抽取部门信息、部门管理、部门闲置、休假项目信息
 import os
 import sys
 import argparse

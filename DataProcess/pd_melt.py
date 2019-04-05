@@ -1,4 +1,6 @@
 # coding=utf-8   //这句是使用utf8编码方式方法， 可以单独加入python头使用
+# 根据产品管理部提供的项目产品分配比例，生成项目产品分配表PP，横表转纵表
+# 只年底用，平时一般不用
 import os
 import sys
 import getopt

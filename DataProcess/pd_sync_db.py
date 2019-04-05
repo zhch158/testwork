@@ -1,4 +1,5 @@
 # coding=utf-8   //这句是使用utf8编码方式方法， 可以单独加入python头使用
+# 将加工后的明细数据同步到mysql
 import os
 import sys
 import argparse

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-  
+# 访问数据库基本操作 pymysql，sqlalchemy
 import sys
 import pymysql
 # import mysql.connector

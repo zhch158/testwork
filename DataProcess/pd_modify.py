@@ -1,6 +1,8 @@
 # coding=utf-8   //这句是使用utf8编码方式方法， 可以单独加入python头使用
+# 根据项目损益明细表（考核，管理，验收），生成项目各口径的明细数据
 import os
 import sys
+import argparse
 import getopt
 import pandas as pd
 
@@ -40,80 +42,47 @@ def pd_modify(xls_file, xls_sheet=0, methods='考核口径', yyyymm='201801', o_
     else:
         df.to_excel(o_file, encoding='utf-8', sheet_name=methods, index=False, header=True)
 
-def print_usage(argv):
-    print("Usage: ", argv[0])
-    print("\t-h --help")
-    print("\t-f --filename <execl filename>")
-    print("\t-s --sheetname <execl sheetname>")
-    print("\t-t --yyyymm <201811>")
-    print("\t-d --methods <考核口径>")
-    print("\t-o --output <output filename>")
+def pd_check(xls_file, xls_sheet, yyyymm, o_file, skiprows=3):
+    return pd_modify(xls_file, xls_sheet, '考核口径', yyyymm, o_file, skiprows)
 
-def get_opts(argv):
-    xls_file = ""
-    xls_sheet = ""
-    methods = ""
-    yyyymm = ""
-    o_file = ""
+def pd_manage(xls_file, xls_sheet, yyyymm, o_file, skiprows=3):
+    return pd_modify(xls_file, xls_sheet, '管理口径', yyyymm, o_file, skiprows)
 
-    if(len(argv) == 1):
-        print_usage(argv)
-        sys.exit(1)
+def pd_receive(xls_file, xls_sheet, yyyymm, o_file, skiprows=2):
+    return pd_modify(xls_file, xls_sheet, '验收口径', yyyymm, o_file, skiprows)
 
-    try:
-        opts, args = getopt.getopt(argv[1:], "hf:s:d:t:o:", [
-                                   "help", "filename=", "sheetname=", "methods=", "yyyymm=", "output="])
-    except getopt.GetoptError:
-        print_usage(argv)
-        sys.exit(2)
-    for opt, arg in opts:
-        s = arg.strip()
-        if opt in ("-h", "--help"):
-            print_usage(argv)
-            sys.exit(1)
-        elif opt in ("-f", "--filename"):
-            xls_file = s
-        elif opt in ("-s", "--sheetname"):
-            xls_sheet = s
-        elif opt in ("-d", "--methods"):
-            methods = s
-        elif opt in ("-t", "--yyyymm"):
-            yyyymm = s
-        elif opt in ("-o", "--output"):
-            o_file = s
-    if(xls_file == "" or methods == "" or yyyymm == "" or o_file==""):
-        print_usage(argv)
-        sys.exit(3)
-    if(xls_sheet == ""):
-        xls_sheet=0
-    return xls_file, xls_sheet, methods, yyyymm, o_file
+parser=argparse.ArgumentParser(description='加工项目损益明细')
+# parser.add_argument('integers', metavar='N', type=int, nargs='+', help='an integer for the accumulator')
+# parser.add_argument('--mode', '-m', dest='mode', nargs=1, choices=['sum', 'max'], required=True, help='input mode')
+# parser.add_argument('--sum', '-s', dest='accumulate', action='store_const', const=sum, default=max, help='sum the integers (default: find the max)')
+parser.add_argument('--input', '-i', dest='inputfile', required=True, help='input excel file')
+parser.add_argument('--output', '-o', dest='outputfile', required=True, help='output excel file')
+parser.add_argument('--yyyymm', '-t', dest='yyyymm', type=str, required=True, help='输入年月yyyymm')
+parser.add_argument('--method', '-m', dest='method', required=True, help='选择调用方法', choices=['pd_check', 'pd_manage', 'pd_receive'])
 
 if __name__ == "__main__":
     # 测试用
-    argv1=[]
-    argv2=[]
-    argv3=[]
+    args=list()
     if(len(sys.argv) == 1):
-        argv1 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201812/部门损益明细表【项目】.xls"] + ['-d'] + ['验收口径'] + ['-t'] + ['201812'] + ['-o'] + ['F:/workspace/python/data/201812/项目损益明细表-201812.xlsx']
-        argv2 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201812/部门损益明细表【项目】-完工百分比法-管理口径.xls"] + ['-d'] + ['管理口径'] + ['-t'] + ['201812'] + ['-o'] + ['F:/workspace/python/data/201812/项目损益明细表-201812.xlsx']
-        argv3 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201812/部门损益明细表【项目】-完工百分比法-考核口径.xls"] + ['-d'] + ['考核口径'] + ['-t'] + ['201812'] + ['-o'] + ['F:/workspace/python/data/201812/项目损益明细表-201812.xlsx']
+        parser.print_help()
+        args.append(parser.parse_args('--input F:/workspace/python/data/201812/部门损益明细表【项目】.xls --output F:/workspace/python/data/201812/项目损益明细表-201812.xlsx -t 201812 -m pd_receive'.split()))
+        args.append(parser.parse_args('--input F:/workspace/python/data/201812/部门损益明细表【项目】-完工百分比法-管理口径.xls --output F:/workspace/python/data/201812/项目损益明细表-201812.xlsx -t 201812 -m pd_manage'.split()))
+        args.append(parser.parse_args('--input F:/workspace/python/data/201812/部门损益明细表【项目】-完工百分比法-考核口径.xls --output F:/workspace/python/data/201812/项目损益明细表-201812.xlsx -t 201812 -m pd_check'.split()))
     else:
-        argv1=sys.argv
+        args.append(parser.parse_args())
 
-    print("\nCMD:[%s]\n" % (argv1))
-    xls_file, xls_sheet, methods, yyyymm, o_file = get_opts(argv1)
+    o_file=''
+    writer=None
+    for arg in args:
+        if(arg.outputfile!=o_file):
+            if(writer):
+                writer.save()
+            o_file=arg.outputfile
+            writer = pd.ExcelWriter(o_file)
+        func=globals().get(arg.method)
+        if(func!=None):
+            func(arg.inputfile, 0, arg.yyyymm, writer)
+        else:
+            raise("find function[{}] error".format(arg.method))  
 
-    writer = pd.ExcelWriter(o_file)
-
-    pd_modify(xls_file, xls_sheet, methods, yyyymm, writer, 2)
-
-    print("\nCMD:[%s]\n" % (argv2))
-    xls_file, xls_sheet, methods, yyyymm, o_file = get_opts(argv2)
-    pd_modify(xls_file, xls_sheet, methods, yyyymm, writer, 3)
-
-    print("\nCMD:[%s]\n" % (argv3))
-    xls_file, xls_sheet, methods, yyyymm, o_file = get_opts(argv3)
-    pd_modify(xls_file, xls_sheet, methods, yyyymm, writer, 3)
-
-    writer.save()
-    
+    writer.save()    
