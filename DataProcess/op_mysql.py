@@ -41,7 +41,7 @@ class PdMysql:
             self.engine = engine
         except Exception as e:
             print('connect error [%s]' %e)
-            raise("DataBase connect error,please check the db config")  
+            raise Exception("DataBase connect error,please check the db config")  
 
 class Mysql:
     # def __init__(self):
@@ -68,7 +68,7 @@ class Mysql:
             self.cur = self.con.cursor()
         except Exception as e:
             print('connect error [%s]' %e)
-            raise("DataBase connect error,please check the db config")  
+            raise Exception("DataBase connect error,please check the db config")  
 
     def create_table(self,sql_str):
         '''创建数据表'''
@@ -134,7 +134,7 @@ class Mysql:
                     self.con.close()
             except Exception as e:
                 print(e)
-                raise("关闭异常, %s,%s" % (type(self.cur), type(self.con)))  
+                raise Exception("关闭异常, %s,%s" % (type(self.cur), type(self.con)))  
  
     #获取连接信息
     def get_connect_info(self):

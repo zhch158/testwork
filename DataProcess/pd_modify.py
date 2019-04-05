@@ -83,6 +83,6 @@ if __name__ == "__main__":
         if(func!=None):
             func(arg.inputfile, 0, arg.yyyymm, writer)
         else:
-            raise("find function[{}] error".format(arg.method))  
+            raise Exception("find function[{}] error".format(arg.method))  
 
     writer.save()    

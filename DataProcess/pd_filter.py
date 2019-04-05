@@ -1,10 +1,10 @@
 # coding=utf-8   //这句是使用utf8编码方式方法， 可以单独加入python头使用
+#该文件目前已不使用
 import os
 import sys
 import getopt
 import pandas as pd
 
-#该文件目前已不使用
 # def pd_filter(xls_file, xls_sheet=0, xls_branch='部门列表.xls', yyyymm='201801', o_file="result.xlsx", o_sheet='立项', skiprows=2):
 #     level1=level2=level3=level4=''
 #     data=pd.read_excel(xls_file, sheet_name=xls_sheet, skiprows=skiprows, skipfooter=0)
@@ -54,71 +54,71 @@ import pandas as pd
     # o_data['调整说明']=''
     # o_data.to_excel(o_file, encoding='utf-8', index=False, header=True)
 
-def print_usage(argv):
-    print("Usage: ", argv[0])
-    print("\t-h --help")
-    print("\t-f --filename <execl filename>")
-    print("\t-s --sheetname <execl sheetname>")
-    print("\t-b --branchfile <execl filename>")
-    print("\t-t --yyyymm <201811>")
-    print("\t-o --output <output filename>")
+# def print_usage(argv):
+#     print("Usage: ", argv[0])
+#     print("\t-h --help")
+#     print("\t-f --filename <execl filename>")
+#     print("\t-s --sheetname <execl sheetname>")
+#     print("\t-b --branchfile <execl filename>")
+#     print("\t-t --yyyymm <201811>")
+#     print("\t-o --output <output filename>")
 
-def get_opts(argv):
-    xls_file = ""
-    xls_sheet = ""
-    xls_branch = ""
-    yyyymm = ""
-    o_file = ""
+# def get_opts(argv):
+#     xls_file = ""
+#     xls_sheet = ""
+#     xls_branch = ""
+#     yyyymm = ""
+#     o_file = ""
 
-    if(len(argv) == 1):
-        print_usage(argv)
-        sys.exit(1)
+#     if(len(argv) == 1):
+#         print_usage(argv)
+#         sys.exit(1)
 
-    try:
-        opts, args = getopt.getopt(argv[1:], "hf:s:b:t:o:", [
-                                   "help", "filename=", "sheetname=", "branchfile=", "yyyymm=", "output="])
-    except getopt.GetoptError:
-        print_usage(argv)
-        sys.exit(2)
-    for opt, arg in opts:
-        s = arg.strip()
-        if opt in ("-h", "--help"):
-            print_usage(argv)
-            sys.exit(1)
-        elif opt in ("-f", "--filename"):
-            xls_file = s
-        elif opt in ("-s", "--sheetname"):
-            xls_sheet = s
-        elif opt in ("-b", "--branchfile"):
-            xls_branch = s
-        elif opt in ("-t", "--yyyymm"):
-            yyyymm = s
-        elif opt in ("-o", "--output"):
-            o_file = s
-    if(xls_file == "" or xls_branch == "" or yyyymm == "" or o_file==""):
-        print_usage(argv)
-        sys.exit(3)
-    if(xls_sheet == ""):
-        xls_sheet=0
-    return xls_file, xls_sheet, xls_branch, yyyymm, o_file
+#     try:
+#         opts, args = getopt.getopt(argv[1:], "hf:s:b:t:o:", [
+#                                    "help", "filename=", "sheetname=", "branchfile=", "yyyymm=", "output="])
+#     except getopt.GetoptError:
+#         print_usage(argv)
+#         sys.exit(2)
+#     for opt, arg in opts:
+#         s = arg.strip()
+#         if opt in ("-h", "--help"):
+#             print_usage(argv)
+#             sys.exit(1)
+#         elif opt in ("-f", "--filename"):
+#             xls_file = s
+#         elif opt in ("-s", "--sheetname"):
+#             xls_sheet = s
+#         elif opt in ("-b", "--branchfile"):
+#             xls_branch = s
+#         elif opt in ("-t", "--yyyymm"):
+#             yyyymm = s
+#         elif opt in ("-o", "--output"):
+#             o_file = s
+#     if(xls_file == "" or xls_branch == "" or yyyymm == "" or o_file==""):
+#         print_usage(argv)
+#         sys.exit(3)
+#     if(xls_sheet == ""):
+#         xls_sheet=0
+#     return xls_file, xls_sheet, xls_branch, yyyymm, o_file
 
-if __name__ == "__main__":
-    # 测试用
-    argv1=[]
-    argv2=[]
-    if(len(sys.argv) == 1):
-        argv1 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/成本明细表【非项目-不立项】.xls"] + ["-s"] + [""] + ['-b'] + ['F:/workspace/python/data/201811/部门列表-201812.xlsx'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/非项目损益明细表.xlsx']
-        argv2 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/成本明细表【非项目-立项】.xls"] + ['-b'] + ['F:/workspace/python/data/201811/部门列表-201812.xlsx'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/非项目损益明细表.xlsx']
-    else:
-        argv1=sys.argv
+# if __name__ == "__main__":
+#     # 测试用
+#     argv1=[]
+#     argv2=[]
+#     if(len(sys.argv) == 1):
+#         argv1 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/成本明细表【非项目-不立项】.xls"] + ["-s"] + [""] + ['-b'] + ['F:/workspace/python/data/201811/部门列表-201812.xlsx'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/非项目损益明细表.xlsx']
+#         argv2 += [sys.argv[0]] + ["-f"] + ["F:/workspace/python/data/201811/成本明细表【非项目-立项】.xls"] + ['-b'] + ['F:/workspace/python/data/201811/部门列表-201812.xlsx'] + ['-t'] + ['201811'] + ['-o'] + ['F:/workspace/python/data/201811/非项目损益明细表.xlsx']
+#     else:
+#         argv1=sys.argv
 
-    print("CMD:[%s]\n" % (argv1))
-    xls_file, xls_sheet, xls_branch, yyyymm, o_file = get_opts(argv1)
-    writer = pd.ExcelWriter(o_file)
-    pd_filter(xls_file, xls_sheet, xls_branch, yyyymm, writer, '不立项', 2)
+#     print("CMD:[%s]\n" % (argv1))
+#     xls_file, xls_sheet, xls_branch, yyyymm, o_file = get_opts(argv1)
+#     writer = pd.ExcelWriter(o_file)
+#     pd_filter(xls_file, xls_sheet, xls_branch, yyyymm, writer, '不立项', 2)
 
-    print("CMD:[%s]\n" % (argv2))
-    xls_file, xls_sheet, xls_branch, yyyymm, o_file = get_opts(argv2)
-    pd_filter(xls_file, xls_sheet, xls_branch, yyyymm, writer, '立项', 2)
+#     print("CMD:[%s]\n" % (argv2))
+#     xls_file, xls_sheet, xls_branch, yyyymm, o_file = get_opts(argv2)
+#     pd_filter(xls_file, xls_sheet, xls_branch, yyyymm, writer, '立项', 2)
 
-    writer.save()
+#     writer.save()

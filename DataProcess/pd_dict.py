@@ -80,7 +80,7 @@ def pd_branch(engine, o_file="branch.xlsx"):
     df.to_excel(o_file, encoding='utf-8', sheet_name='部门列表', index=False, header=True)
 
 def pd_project(engine, o_file="project.xlsx"):
-    sql_content="SELECT distinct t.项目编号, t.项目名称, t.项目类型, t.项目所属部门级一, t.项目所属部门级二, t.项目所属部门级三, t.项目所属部门级四 FROM RY_YCOMS t WHERE t.项目名称 LIKE '%%部门管理' OR t.项目名称 LIKE '%%部门闲置' OR t.项目名称 LIKE '%%部门休假' order by 1"
+    sql_content="SELECT distinct t.项目编号, t.项目名称, t.项目类型, t.项目所属部门级一, t.项目所属部门级二, t.项目所属部门级三, t.项目所属部门级四 FROM RY_YCOMS t WHERE t.项目名称 LIKE '%%部门管理' OR t.项目名称 LIKE '%%部门闲置' OR t.项目名称 LIKE '%%部门休假' OR t.项目名称 LIKE '%%部门日常' order by 1"
     df=pd.read_sql(sql_content, engine)
     print("table[%s], rows[%d], cols[%d]" %('RY_YCOMS', df.iloc[:,0].size, df.columns.size))
     df.loc[df['项目名称'].str.contains('.*部门管理'), '项目类型']= '部门管理'
@@ -98,19 +98,20 @@ parser.add_argument('--output', '-o', dest='outputfile', required=True, help='ou
 
 if __name__ == "__main__":
     # 测试用
+    args=list()
     if(len(sys.argv) == 1):
         parser.print_help()
         # args=parser.parse_args('--input F:/workspace/python/data/201811/执行中组织结构基本信息表-20181225130600.xlsx --output F:/workspace/python/data/201811/部门列表-201812.xlsx -m pd_branch'.split())
-        # args=parser.parse_args('--output F:/workspace/python/data/201812/BRANCH-RY-201812.xlsx -m pd_branch'.split())
-        args=parser.parse_args('--output F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx -m pd_project'.split())
+        args.append(parser.parse_args('--output F:/workspace/python/data/201812/BRANCH-RY-201812.xlsx -m pd_branch'.split()))
+        args.append(parser.parse_args('--output F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx -m pd_project'.split()))
     else:
-        args=parser.parse_args()
+        args.append(parser.parse_args())
 
     db_params=get_db_conf('database.ini')
     pdConn = PdMysql(**db_params)
-    func=globals().get(args.method)
-    if(func!=None):
-        func(pdConn.engine, args.outputfile)
-    else:
-        raise("find function[{}] error".format(args.method))  
-
+    for arg in args:
+        func=globals().get(arg.method)
+        if(func!=None):
+            func(pdConn.engine, arg.outputfile)
+        else:
+            raise Exception("find function[{}] error".format(arg.method))  

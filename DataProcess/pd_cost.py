@@ -6,10 +6,16 @@ import argparse
 import getopt
 import pandas as pd
 
-def set_value(project, lev3_name, col_name, prefix='', suffix=''):
+def set_value(project, lev3_name, col_name, prefix='', suffix='', lev2_name=None, match_col=None):
     row=project.loc[project['项目所属部门级三']==lev3_name]
     if(row.size>0):
         return row[col_name].values[0]
+    else:
+        if(lev2_name!=None and match_col!=None):
+            row=project.loc[project[match_col]==lev2_name]
+            if(row.size>0):
+                return row[col_name].values[0]
+    print("lev3_name[%s] not found" %lev3_name)
     return prefix + lev3_name + suffix
 
 def pd_workload(xls_file, xls_sheet=0, xls_project=None, yyyymm='201801', o_file="result.xlsx", skiprows=2):
@@ -21,19 +27,22 @@ def pd_workload(xls_file, xls_sheet=0, xls_project=None, yyyymm='201801', o_file
     df.insert(0, '月份', yyyymm)
     df.to_excel(o_file, encoding='utf-8', sheet_name=str(yyyymm), index=False, header=True)
 
-def pd_direct_cost(xls_file, xls_sheet=0, xls_project=None, yyyymm='201801', o_file="result.xlsx", skiprows=2):
+def pd_direct_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='201801', o_file="result.xlsx", skiprows=2):
     data=pd.read_excel(xls_file, sheet_name=xls_sheet, skiprows=skiprows, skipfooter=0)
     df=pd.DataFrame(data).loc[:, ['所属一级部', '所属二级部', '项目编号', '项目名称', '项目状态', '项目预算数', '累计实际数', '当年实际数', '预算剩余', '全年预算执行比', '是否超预算']]
     print("file[%s], rows[%d], cols[%d]" %(xls_file, df.iloc[:,0].size, df.columns.size))
     df=df.fillna(method='ffill')
     df=df.loc[df['所属二级部'].str.contains('汇总', regex=True)==False]
 
+    project=pd.read_excel(xls_project, sheet_name=0)
+
     res_df=pd.DataFrame(columns=['月份', '项目类型', '项目编号', '项目名称', '项目状态', '所属部门级一', '所属部门级二', '所属部门级三', '所属部门级四', '累计总成本', '当年累计成本', '口径'])
     res_df['项目编号']=df['项目编号']
     res_df['项目名称']=df['项目名称']
     res_df['项目状态']=df['项目状态']
-    res_df['所属部门级一']=df['所属一级部']
-    res_df['所属部门级二']=df['所属二级部']
+    res_df['所属部门级二']=df['所属一级部']
+    res_df['所属部门级三']=df['所属二级部']
+    res_df['所属部门级一']=df.apply(lambda row: set_value(project, row['所属二级部'], '项目所属部门级一', lev2_name=row['所属一级部'], match_col='项目所属部门级二', prefix='ERROR-'), axis=1)
     res_df['累计总成本']=df['累计实际数']
     res_df['当年累计成本']=df['当年实际数']
     res_df.loc[res_df['项目编号'].str.contains('.*-S'), '项目类型']= '售前项目'
@@ -60,6 +69,7 @@ def pd_manage_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='20
     df=df.loc[df['所属二级部'].str.contains('汇总', regex=True)==False]
 
     project=pd.read_excel(xls_project, sheet_name=0)
+    project=project.loc[project['项目编号'].str.contains('.*-[WO]')]
 
     res_df=pd.DataFrame(columns=['月份', '项目类型', '项目编号', '项目名称', '项目状态', '所属部门级一', '所属部门级二', '所属部门级三', '所属部门级四', '累计总成本', '当年累计成本', '口径'])
     res_df['所属部门级二']=df['所属一级部']
@@ -68,7 +78,7 @@ def pd_manage_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='20
     # res_df['项目名称']=df['所属二级部'].apply(lambda x:set_value(x, suffix='-部门管理'))
     res_df['项目编号']=df.apply(lambda row: set_value(project, row['所属二级部'], '项目编号', 'YTEC-2019-', '-W'), axis=1)
     res_df['项目名称']=df.apply(lambda row: set_value(project, row['所属二级部'], '项目名称', suffix='-部门管理'), axis=1)
-    res_df['所属部门级一']=df.apply(lambda row: set_value(project, row['所属二级部'], '项目所属部门级一'), axis=1)
+    res_df['所属部门级一']=df.apply(lambda row: set_value(project, row['所属二级部'], '项目所属部门级一', lev2_name=row['所属一级部'], match_col='项目所属部门级二', prefix='ERROR-'), axis=1)
     res_df['累计总成本']=df['部门总累计实际数  ']
     res_df['当年累计成本']=df['部门总累计实际数  ']
 
@@ -86,13 +96,14 @@ def pd_idle_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='2018
     df=df.loc[df['二级部名称'].str.contains('汇总', regex=True)==False]
 
     project=pd.read_excel(xls_project, sheet_name=0)
+    project=project.loc[project['项目编号'].str.contains('.*-[YL]')]
 
     res_df=pd.DataFrame(columns=['月份', '项目类型', '项目编号', '项目名称', '项目状态', '所属部门级一', '所属部门级二', '所属部门级三', '所属部门级四', '累计总成本', '当年累计成本', '口径'])
     res_df['所属部门级二']=df['一级部名称']
     res_df['所属部门级三']=df['二级部名称']
     res_df['项目编号']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目编号', 'YTEC-2019-', '-Y'), axis=1)
     res_df['项目名称']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目名称', suffix='-部门闲置'), axis=1)
-    res_df['所属部门级一']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目所属部门级一'), axis=1)
+    res_df['所属部门级一']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目所属部门级一', lev2_name=row['一级部名称'], match_col='项目所属部门级二', prefix='ERROR-'), axis=1)
     res_df['累计总成本']=df['累计至今部门闲置实际支出']
     res_df['当年累计成本']=df['累计至今部门闲置实际支出']
 
@@ -119,10 +130,10 @@ if __name__ == "__main__":
     args=list()
     if(len(sys.argv) == 1):
         parser.print_help()
-        args.append(parser.parse_args('--input F:/workspace/python/data/201812/售前、内部管理、产品研发预实对比明细表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_direct_cost'.split()))
+        args.append(parser.parse_args('-p F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx --input F:/workspace/python/data/201812/售前、内部管理、产品研发预实对比明细表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_direct_cost'.split()))
         args.append(parser.parse_args('-p F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx --input F:/workspace/python/data/201812/部门管理预实对比汇总表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_manage_cost'.split()))
         args.append(parser.parse_args('-p F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx --input F:/workspace/python/data/201812/部门闲置预实对比汇总表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_idle_cost'.split()))
-        args.append(parser.parse_args('--input F:/workspace/python/data/201812/项目人工投入统计表(按人员-项目).xls -t 201812 -o F:/workspace/python/data/201812/项目人工投入统计表(按人员-项目)-201812.xlsx -m pd_workload'.split()))
+        # args.append(parser.parse_args('--input F:/workspace/python/data/201812/项目人工投入统计表(按人员-项目).xls -t 201812 -o F:/workspace/python/data/201812/项目人工投入统计表(按人员-项目)-201812.xlsx -m pd_workload'.split()))
     else:
         args.append(parser.parse_args())
 
@@ -138,6 +149,6 @@ if __name__ == "__main__":
         if(func!=None):
             func(arg.inputfile, 0, arg.projectfile, arg.yyyymm, writer, 2)
         else:
-            raise("find function[{}] error".format(arg.method))  
+            raise Exception("find function[{}] error".format(arg.method))  
 
     writer.save()
