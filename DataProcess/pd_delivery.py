@@ -42,13 +42,13 @@ def pd_modify(xls_file, xls_sheet=0, methods='考核口径', yyyymm='201801', o_
     else:
         df.to_excel(o_file, encoding='utf-8', sheet_name=methods, index=False, header=True)
 
-def pd_check(xls_file, xls_sheet, yyyymm, o_file, skiprows=3):
+def pd_check(xls_file, xls_sheet=0, yyyymm='201800', o_file='result.xlsx', skiprows=3):
     return pd_modify(xls_file, xls_sheet, '考核口径', yyyymm, o_file, skiprows)
 
-def pd_manage(xls_file, xls_sheet, yyyymm, o_file, skiprows=3):
+def pd_manage(xls_file, xls_sheet=0, yyyymm='201800', o_file='result.xlsx', skiprows=3):
     return pd_modify(xls_file, xls_sheet, '管理口径', yyyymm, o_file, skiprows)
 
-def pd_receive(xls_file, xls_sheet, yyyymm, o_file, skiprows=2):
+def pd_receive(xls_file, xls_sheet=0, yyyymm='201800', o_file='result.xlsx', skiprows=2):
     return pd_modify(xls_file, xls_sheet, '验收口径', yyyymm, o_file, skiprows)
 
 parser=argparse.ArgumentParser(description='加工项目损益明细')

@@ -1,7 +1,8 @@
 #全局设置
 config:
     workdir: F:/workspace/python/data/201812
-    yyyymm: 201812
+    yyyymm: '201812'
+    dbconfig: ./database.ini
     
 # 部门列表:
 #     输入文件: "${workdir}/执行中组织结构基本信息表 20181225130600.xlsx"
@@ -13,36 +14,45 @@ config:
 #         ["${workdir}/实施产品确认-1211 - 考核口径 - 考核单元计算 -0123.xlsx", "PP"]
 #     输出文件: ${workdir}/pp-${yyyymm}.xlsx
 
-# 项目损益:
-#     输入文件:
-#         #- [文件名, 口径, 跳过行数]
-#         - ["${workdir}/部门损益明细表【项目】.xls", "验收口径", 2]
-#         - ["${workdir}/部门损益明细表【项目】-完工百分比法-管理口径.xls", "管理口径", 3]
-#         - ["${workdir}/部门损益明细表【项目】-完工百分比法-考核口径.xls", "考核口径", 3]
-#     输出文件: ${workdir}/项目损益明细表-${yyyymm}.xlsx
-#     月份: ${yyyymm}
-
-# 非项目损益:
-#     输入文件:
-#         #- [文件名, 输出SHEET名称前缀, 跳过行数]
-#         - ["${workdir}/成本明细表【非项目-不立项】.xls", "非项目-不立项", 2]
-#         - ["${workdir}/成本明细表【非项目-立项】.xls", "非项目-立项", 2]
-#     输出文件: ${workdir}/非项目损益明细表-${yyyymm}.xlsx
-#     部门列表: ${workdir}/部门列表-${yyyymm}.xlsx
-#     月份: ${yyyymm}
-
-# 非项目费用:
-#     输入文件:
-#         #- [方法名, 文件名, 输出SHEET名称前缀, 跳过行数]
-#         - ["pd_direct_cost", "${workdir}/售前、内部管理、产品研发预实对比明细表.xls", "售前、内部管理、产品研发", 2]
-#         - ["pd_manage_cost", "${workdir}/部门管理预实对比汇总表.xls", "部门管理", 2]
-#         - ["pd_idle_cost", "${workdir}/部门闲置预实对比汇总表.xls", "部门闲置", 2]
-#     输出文件: ${workdir}/非项目损益明细表-${yyyymm}.xlsx
-#     月份: ${yyyymm}
-
 项目人工投入:
     输入文件:
         #- [方法名, 文件名, 跳过行数]
         - ["pd_workload", "${workdir}/项目人工投入统计表(按人员-项目).xls", 2]
     输出文件: ${workdir}/项目人工投入统计表(按人员-项目)-${yyyymm}.xlsx
+    月份: ${yyyymm}
+
+非立项项目列表:
+    输出文件: "${workdir}/非立项项目列表-${yyyymm}.xlsx"
+
+项目损益:
+    输入文件:
+        #- [方法名, 文件名, 跳过行数]
+        - ['pd_receive', "${workdir}/部门损益明细表【项目】.xls", 2]
+        - ['pd_manage', "${workdir}/部门损益明细表【项目】-完工百分比法-管理口径.xls", 3]
+        - ['pd_check', "${workdir}/部门损益明细表【项目】-完工百分比法-考核口径.xls", 3]
+    输出文件: ${workdir}/项目损益明细表-${yyyymm}.xlsx
+    月份: ${yyyymm}
+
+非项目费用:
+    输入文件:
+        #- [方法名, 文件名, 跳过行数]
+        - ["pd_direct_cost", "${workdir}/售前、内部管理、产品研发预实对比明细表.xls", 2]
+        - ["pd_manage_cost", "${workdir}/部门管理预实对比汇总表.xls", 2]
+        - ["pd_idle_cost", "${workdir}/部门闲置预实对比汇总表.xls", 2]
+    输出文件: ${workdir}/非项目损益明细表-${yyyymm}.xlsx
+    月份: ${yyyymm}
+    非立项项目列表: ${workdir}/非立项项目列表-${yyyymm}.xlsx
+
+同步数据库:
+    输入文件:
+        - ["sync_table", "${workdir}/项目人工投入统计表(按人员-项目)-${yyyymm}.xlsx", "RY_YCOMS"]
+        - ["sync_xmmx", "${workdir}/项目损益明细表-${yyyymm}.xlsx", "项目损益明细"]
+        - ["sync_fxmmx", "${workdir}/非项目损益明细表-${yyyymm}.xlsx", "非项目损益明细"]
+    月份: ${yyyymm}
+
+调整数据库:
+    输入文件:
+        - "upd_RY_ZHCH"
+        - "upd_project"
+        - "upd_RY_YCOMS"
     月份: ${yyyymm}
