@@ -15,22 +15,18 @@ import pd_update_db
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-def print_usage(argv):
-    print("Usage: ", argv[0])
-    print("\t-h --help")
-    print("\t-c --config <filename>")
-
-parser=argparse.ArgumentParser(description='根据配置文件，加工明细数据，同步、修改数据库')
-parser.add_argument('--config', '-c', dest='inputfile', required=True, help='input config file')
-parser.add_argument('--section', '-s', dest='section', required=False, help='input section')
-
 if __name__ == "__main__":
     # 测试用
-    # parser.print_help()
+    parser=argparse.ArgumentParser(description='根据配置文件，加工明细数据，同步、修改数据库')
+    parser.add_argument('--config', '-c', dest='inputfile', required=True, help='input config file')
+    parser.add_argument('--section', '-s', dest='section', required=False, help='input section')
+
     pp_dict=workload_dict=b_dict=xm_dict=fxm_dict=sync_dict=upd_dict=None
+
     if(len(sys.argv) == 1):
+        # parser.print_help()
         # args=parser.parse_args('--config ./yusys-detail-excel.yaml'.split())
-        args=parser.parse_args('--config ./yusys-detail-excel.yaml --section 非立项项目列表'.split())
+        args=parser.parse_args('--config ./yusys-detail-excel.yaml --section 项目人工投入`'.split())
     else:
         args=parser.parse_args()
 

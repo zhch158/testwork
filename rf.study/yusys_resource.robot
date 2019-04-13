@@ -5,21 +5,28 @@ Library           Dialogs
 Library           Screenshot
 
 *** Variables ***
+${主页}            http://it.yusys.com.cn/yusys/main.asp
 ${登录页}          http://it.yusys.com.cn/yusys/login.html
-${明细页}          http://it.yusys.com.cn/yusys/DeptProfitAndLossDetail/toList.asp
+${考核、管理汇总页}    http://it.yusys.com.cn/yusys/DeptProfitAndLossTotal/toList.asp
+${验收法汇总页}     http://it.yusys.com.cn/yusys/deptProfitTotal/toList.asp
+${考核、管理明细页}    http://it.yusys.com.cn/yusys/DeptProfitAndLossDetail/toList.asp
+${验收法明细页}     http://it.yusys.com.cn/yusys/deptProfitDetail/toList.asp
+${部门管理明细页}   http://it.yusys.com.cn/yusys/deptBudgetCompareActualTotal/toList.asp
+${部门闲置明细页}   http://it.yusys.com.cn/yusys/idleDeptBudgetCompareActualTotal/toList.asp
+${售前、内部管理、产品研发明细页}     http://it.yusys.com.cn/yusys/preSalRealContrastTableDetail/toList.asp
 ${用户名}          zhengchun
 ${密码}            Zhch1234
 ${downloaddir}    X:${/}TEMP
-# ${浏览器}          Chrome
-${浏览器}          Firefox
+${浏览器}          Chrome
+# ${浏览器}          Firefox
 ${ff_profile_dir}     F:${/}workspace${/}selenium-profile
 ${paramsfile}     ./${浏览器}.params.json
 
 *** Keywords ***
 打开网页
     [Arguments]     ${url}
-    # My Open Browser    url=${url}    browser=${浏览器}    remote_url=http://127.0.0.1:9515     downloaddir=${downloaddir}    paramsfile=${paramsfile}
-    My Open Browser    url=${url}    browser=${浏览器}    remote_url=http://127.0.0.1:4444     downloaddir=${downloaddir}    paramsfile=${paramsfile}    ff_profile_dir=${ff_profile_dir} 
+    My Open Browser    url=${url}    browser=${浏览器}    remote_url=http://127.0.0.1:9515     downloaddir=${downloaddir}    paramsfile=${paramsfile}
+    # My Open Browser    url=${url}    browser=${浏览器}    remote_url=http://127.0.0.1:4444     downloaddir=${downloaddir}    paramsfile=${paramsfile}    ff_profile_dir=${ff_profile_dir} 
     Wait For Condition      return document.readyState=="complete"     60
 
 连接网页
@@ -55,6 +62,12 @@ ${paramsfile}     ./${浏览器}.params.json
     Click Element    css:#s2id_projclassify > a.select2-choice > span
     Click Element    css:li.select2-results-dept-0 > div.select2-result-label[title='${项目分类}']
 
+选择部门类型
+    [Arguments]     ${部门类型}
+    Wait Until Element Is Enabled   css:#s2id_categroy > a.select2-choice > span       60
+    Click Element    css:#s2id_categroy > a.select2-choice > span
+    Click Element    css:li.select2-results-dept-0 > div.select2-result-label[title='${部门类型}']
+
 执行查询
     Click Button     query
     # Wait Until Element Is Enabled     query       120
@@ -62,7 +75,7 @@ ${paramsfile}     ./${浏览器}.params.json
 下载报表结果
     [Arguments]                 ${downloaddir}    ${查询时间}        ${保存目录}
     switch_frame                runqian
-    my_wait_until_element_presence   css:img[alt="存为Excel"]       300
+    my_wait_until_element_presence   css:img[alt="存为Excel"]       500
     ${原文件}    ${目标文件}=    Get Report Filename     identifier:saveAsName        ${downloaddir}        ${查询时间}        ${保存目录}
     Delete Report File          ${原文件}          ${目标文件}
     Click Element               css:img[alt="存为Excel"]
@@ -76,12 +89,59 @@ ${paramsfile}     ./${浏览器}.params.json
     Pause Execution
     Close Browser
 
-损益明细
-    [Arguments]     ${报表首页}    ${核算类别}    ${报表口径}    ${查询时间}   ${项目分类}    ${downloaddir}    ${保存目录}
+完工百分比损益汇总
+    [Arguments]     ${报表首页}    ${核算类别}    ${报表口径}    ${查询时间}   ${部门类型}    ${downloaddir}    ${保存目录}
     跳转网页         ${报表首页}      
     选择核算类别     ${核算类别}
     选择报表口径     ${报表口径}
     输入查询时间     ${查询时间}
-    选择项目分类     ${项目分类}
+    选择部门类型     ${部门类型}
     执行查询
+    下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
+
+验收损益汇总
+    [Arguments]     ${报表首页}    ${查询时间}   ${部门类型}    ${downloaddir}    ${保存目录}
+    跳转网页         ${报表首页}      
+    输入查询时间     ${查询时间}
+    选择部门类型     ${部门类型}
+    执行查询
+    下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
+
+完工百分比损益明细
+    [Arguments]     ${报表首页}    ${核算类别}    ${报表口径}    ${查询时间}     ${downloaddir}    ${保存目录}
+    跳转网页         ${报表首页}      
+    选择核算类别     ${核算类别}
+    选择报表口径     ${报表口径}
+    输入查询时间     ${查询时间}
+    # 选择项目分类     ${项目分类}
+    执行查询
+    下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
+
+验收损益明细
+    [Arguments]     ${报表首页}    ${查询时间}   ${downloaddir}    ${保存目录}
+    跳转网页         ${报表首页}      
+    输入查询时间     ${查询时间}
+    执行查询
+    下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
+
+非项目费用明细
+    [Arguments]     ${报表首页}    ${查询时间}   ${downloaddir}    ${保存目录}
+    跳转网页         ${报表首页}      
+    输入查询时间     ${查询时间}
+    执行查询
+    下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
+
+项目投入明细
+    [Arguments]     ${报表首页}    ${查询时间}   ${downloaddir}    ${保存目录}
+    跳转网页         ${报表首页}
+    Click Element   css:#research-system                 #切换应用系统
+    Click Element   identifier:xdglxt                    #考勤管理
+    Click Element   identifier:Report_Analysis           #考勤报表
+    Click Element   identifier:Foundation_Report         #明细类
+    Click Element   identifier:Staff_Inputs_Condition    #人员投入情况
+    Click Element   identifier:yyglbb3                   #项目投入统计明细表
+    switch_frame    yyglbb3-ifr-casually
+    Clear Element Text   identifier:startDate
+    Input Text      identifier:startDate   ${查询时间}
+    Click Button    button_query                         #执行查询
     下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
