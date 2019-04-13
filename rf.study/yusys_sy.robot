@@ -1,11 +1,11 @@
 *** Settings ***
-Documentation     下载公司项目损益明细数据
+Documentation     下载公司损益数据
 resource          yusys_resource.robot
 Suite Setup       连接网页
 # Suite Teardown    退出
 
 *** Variables ***
-${Y_M}        2019-01
+${Y_M}        2019-03
 ${DATADIR}    F:/workspace/python/data/${Y_M}
 
 
@@ -36,8 +36,7 @@ ${DATADIR}    F:/workspace/python/data/${Y_M}
 
 下载验收法明细
     [Template]     验收损益明细
-    ${验收法明细页}       ${Y_M}    二级部    ${downloaddir}    ${DATADIR}
-    ${验收法明细页}       ${Y_M}    二级部    ${downloaddir}    ${DATADIR}
+    ${验收法明细页}       ${Y_M}    ${downloaddir}    ${DATADIR}
 
 下载非项目费用明细
     [Template]     非项目费用明细

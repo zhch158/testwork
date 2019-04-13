@@ -44,7 +44,8 @@ ${paramsfile}     ./${浏览器}.params.json
     Sleep            2
     # Click Element    xpath://div[@id='s2id_accountingmethod']/a/span
     # Click Element    css:#s2id_accountingmethod > a:nth-child(1) > span:nth-child(1)
-    Click Element    css:#s2id_accountingmethod > a.select2-choice > span
+    # Click Element    css:#s2id_accountingmethod > a.select2-choice > span
+    Click Element    css:#s2id_accountingmethod > a > span
     Click Element    css:li.select2-results-dept-0 > div.select2-result-label[title='${核算类别}']
 
 选择报表口径
@@ -56,30 +57,51 @@ ${paramsfile}     ./${浏览器}.params.json
     [Arguments]     ${查询时间}
     Input Text      identifier:searchtime   ${查询时间}
    
+输入查询期间
+    [Arguments]     ${查询时间}
+    Input Text      identifier:period   ${查询时间}
+   
 选择项目分类
     [Arguments]     ${项目分类}
     Wait Until Element Is Enabled   css:#s2id_projclassify > a.select2-choice > span       60
     Click Element    css:#s2id_projclassify > a.select2-choice > span
     Click Element    css:li.select2-results-dept-0 > div.select2-result-label[title='${项目分类}']
 
+选择部门类型s2id_categroy
+    [Arguments]     ${部门类型}
+    Wait Until Element Is Enabled   css:#s2id_categroy > a > span
+    Click Element    css:#s2id_categroy > a > span
+    Click Element    css:li.select2-results-dept-0 > div.select2-result-label[title='${部门类型}']
+
 选择部门类型
     [Arguments]     ${部门类型}
-    Wait Until Element Is Enabled   css:#s2id_categroy > a.select2-choice > span       60
-    Click Element    css:#s2id_categroy > a.select2-choice > span
+    Wait Until Element Is Enabled   css:#s2id_orgtype > a > span
+    Click Element    css:#s2id_orgtype > a > span
     Click Element    css:li.select2-results-dept-0 > div.select2-result-label[title='${部门类型}']
 
 执行查询
     Click Button     query
     # Wait Until Element Is Enabled     query       120
 
-下载报表结果
-    [Arguments]                 ${downloaddir}    ${查询时间}        ${保存目录}
+下载报表-HREF
+    [Arguments]                 ${downloaddir}    ${查询时间}        ${保存目录}     ${HREF}
     switch_frame                runqian
-    my_wait_until_element_presence   css:img[alt="存为Excel"]       500
+    Sleep            2
+    # my_wait_until_element_presence   css:img[alt="存为Excel"]       500
+    my_wait_until_element_presence   ${HREF}       500
     ${原文件}    ${目标文件}=    Get Report Filename     identifier:saveAsName        ${downloaddir}        ${查询时间}        ${保存目录}
     Delete Report File          ${原文件}          ${目标文件}
-    Click Element               css:img[alt="存为Excel"]
+    # Click Element               css:img[alt="存为Excel"]
+    Click Element               ${HREF}
     Rename File                 ${原文件}          ${目标文件}
+    
+下载报表结果
+    [Arguments]     ${downloaddir}    ${查询时间}        ${保存目录}
+    下载报表-HREF    ${downloaddir}    ${查询时间}        ${保存目录}     css:#saveExcelA > img
+    
+下载项目人月报表结果
+    [Arguments]     ${downloaddir}    ${查询时间}        ${保存目录}
+    下载报表-HREF    ${downloaddir}    ${查询时间}        ${保存目录}     css:#functionBar > a > img
     
 快照
     Capture Page Screenshot           yusys-{index}.png
@@ -95,14 +117,14 @@ ${paramsfile}     ./${浏览器}.params.json
     选择核算类别     ${核算类别}
     选择报表口径     ${报表口径}
     输入查询时间     ${查询时间}
-    选择部门类型     ${部门类型}
+    选择部门类型s2id_categroy     ${部门类型}
     执行查询
     下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
 
 验收损益汇总
     [Arguments]     ${报表首页}    ${查询时间}   ${部门类型}    ${downloaddir}    ${保存目录}
     跳转网页         ${报表首页}      
-    输入查询时间     ${查询时间}
+    输入查询期间     ${查询时间}
     选择部门类型     ${部门类型}
     执行查询
     下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
@@ -120,7 +142,7 @@ ${paramsfile}     ./${浏览器}.params.json
 验收损益明细
     [Arguments]     ${报表首页}    ${查询时间}   ${downloaddir}    ${保存目录}
     跳转网页         ${报表首页}      
-    输入查询时间     ${查询时间}
+    输入查询期间     ${查询时间}
     执行查询
     下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
 
@@ -141,7 +163,8 @@ ${paramsfile}     ./${浏览器}.params.json
     Click Element   identifier:Staff_Inputs_Condition    #人员投入情况
     Click Element   identifier:yyglbb3                   #项目投入统计明细表
     switch_frame    yyglbb3-ifr-casually
+    my_wait_until_element_presence   name:startDate      60 
     Clear Element Text   identifier:startDate
     Input Text      identifier:startDate   ${查询时间}
     Click Button    button_query                         #执行查询
-    下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
+    下载项目人月报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
