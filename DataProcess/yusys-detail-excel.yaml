@@ -1,7 +1,7 @@
 #全局设置
 config:
-    workdir: F:/workspace/python/data/201903
     yyyymm: '201903'
+    workdir: F:/workspace/python/data
     dbconfig: ./database.ini
     
 # 部门列表:
@@ -17,37 +17,37 @@ config:
 项目人工投入:
     输入文件:
         #- [方法名, 文件名, 跳过行数]
-        - ["pd_workload", "${workdir}/项目人工投入统计表(按人员-项目).xls", 2]
-    输出文件: ${workdir}/项目人工投入统计表(按人员-项目)-${yyyymm}.xlsx
+        - ["pd_workload", "${workdir}/${yyyymm}/项目人工投入统计表(按人员-项目)-${yyyymm}.xls", 2]
+    输出文件: ${workdir}/${yyyymm}/项目人工投入统计表-${yyyymm}.xlsx
     月份: ${yyyymm}
 
 非立项项目列表:
-    输出文件: "${workdir}/非立项项目列表-${yyyymm}.xlsx"
+    输出文件: "${workdir}/${yyyymm}/非立项项目列表-${yyyymm}.xlsx"
 
 项目损益:
     输入文件:
         #- [方法名, 文件名, 跳过行数]
-        - ['pd_receive', "${workdir}/部门损益明细表【项目】.xls", 2]
-        - ['pd_manage', "${workdir}/部门损益明细表【项目】-完工百分比法-管理口径.xls", 3]
-        - ['pd_check', "${workdir}/部门损益明细表【项目】-完工百分比法-考核口径.xls", 3]
-    输出文件: ${workdir}/项目损益明细表-${yyyymm}.xlsx
+        - ['pd_receive', "${workdir}/${yyyymm}/部门损益明细表【项目】-${yyyymm}.xls", 2]
+        - ['pd_manage', "${workdir}/${yyyymm}/部门损益明细表【项目】-完工百分比法-管理口径-${yyyymm}.xls", 3]
+        - ['pd_check', "${workdir}/${yyyymm}/部门损益明细表【项目】-完工百分比法-考核口径-${yyyymm}.xls", 3]
+    输出文件: ${workdir}/${yyyymm}/项目损益明细表-${yyyymm}.xlsx
     月份: ${yyyymm}
 
 非项目费用:
     输入文件:
         #- [方法名, 文件名, 跳过行数]
-        - ["pd_direct_cost", "${workdir}/售前、内部管理、产品研发预实对比明细表.xls", 2]
-        - ["pd_manage_cost", "${workdir}/部门管理预实对比汇总表.xls", 2]
-        - ["pd_idle_cost", "${workdir}/部门闲置预实对比汇总表.xls", 2]
-    输出文件: ${workdir}/非项目损益明细表-${yyyymm}.xlsx
+        - ["pd_direct_cost", "${workdir}/${yyyymm}/售前、内部管理、产品研发预实对比明细表-${yyyymm}.xls", 2]
+        - ["pd_manage_cost", "${workdir}/${yyyymm}/部门管理预实对比汇总表-${yyyymm}.xls", 2]
+        - ["pd_idle_cost", "${workdir}/${yyyymm}/部门闲置预实对比汇总表-${yyyymm}.xls", 2]
+    输出文件: ${workdir}/${yyyymm}/非项目损益明细表-${yyyymm}.xlsx
     月份: ${yyyymm}
-    非立项项目列表: ${workdir}/非立项项目列表-${yyyymm}.xlsx
+    非立项项目列表: ${workdir}/${yyyymm}/非立项项目列表-${yyyymm}.xlsx
 
 同步数据库:
     输入文件:
-        - ["sync_table", "${workdir}/项目人工投入统计表(按人员-项目)-${yyyymm}.xlsx", "RY_YCOMS"]
-        - ["sync_xmmx", "${workdir}/项目损益明细表-${yyyymm}.xlsx", "项目损益明细"]
-        - ["sync_fxmmx", "${workdir}/非项目损益明细表-${yyyymm}.xlsx", "非项目损益明细"]
+        - ["sync_table", "${workdir}/${yyyymm}/项目人工投入统计表-${yyyymm}.xlsx", "RY_YCOMS"]
+        - ["sync_xmmx", "${workdir}/${yyyymm}/项目损益明细表-${yyyymm}.xlsx", "项目损益明细"]
+        - ["sync_fxmmx", "${workdir}/${yyyymm}/非项目损益明细表-${yyyymm}.xlsx", "非项目损益明细"]
     月份: ${yyyymm}
 
 调整数据库:

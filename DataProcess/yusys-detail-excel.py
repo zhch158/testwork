@@ -21,12 +21,14 @@ if __name__ == "__main__":
     parser.add_argument('--config', '-c', dest='inputfile', required=True, help='input config file')
     parser.add_argument('--section', '-s', dest='section', required=False, help='input section')
 
+    # parser.print_help()
+
     pp_dict=workload_dict=b_dict=xm_dict=fxm_dict=sync_dict=upd_dict=None
 
     if(len(sys.argv) == 1):
         # parser.print_help()
         # args=parser.parse_args('--config ./yusys-detail-excel.yaml'.split())
-        args=parser.parse_args('--config ./yusys-detail-excel.yaml --section 项目人工投入`'.split())
+        args=parser.parse_args('--config ./yusys-detail-excel.yaml --section 项目人工投入'.split())
     else:
         args=parser.parse_args()
 
@@ -57,6 +59,7 @@ if __name__ == "__main__":
         pd_melt(pp_input, pp_input_sheet, pp_output)
     
     if(section_name==None or section_name=="项目人工投入"):
+        print(section_name)
         workload_dict=config_dic.get("项目人工投入", None)
     if(workload_dict!=None):
         workload_list=workload_dict.get("输入文件", None)
