@@ -15,7 +15,7 @@ ${部门管理明细页}   http://it.yusys.com.cn/yusys/deptBudgetCompareActualT
 ${部门闲置明细页}   http://it.yusys.com.cn/yusys/idleDeptBudgetCompareActualTotal/toList.asp
 ${售前、内部管理、产品研发明细页}     http://it.yusys.com.cn/yusys/preSalRealContrastTableDetail/toList.asp
 ${用户名}          zhengchun
-${密码}            Zhch1234
+${密码}            zhengchun
 ${downloaddir}    X:${/}TEMP
 ${浏览器}          Chrome
 # ${浏览器}          Firefox

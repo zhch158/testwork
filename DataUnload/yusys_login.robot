@@ -11,6 +11,8 @@ Suite Setup       打开网页    ${登录页}
 登录
     Title Should Start With    资源管理
     Input Text       identifier:loginname   ${用户名}
+    # Input Text       identifier:password    ${密码}
+    ${密码}=         Get Value From User    输入密码          default_value=      hidden=yes
     Input Text       identifier:password    ${密码}
     ${checkcode}=    Get Value From User    输入验证码        default_value=
     Input Text       identifier:checkcode   ${checkcode}
