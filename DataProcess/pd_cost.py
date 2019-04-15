@@ -69,7 +69,7 @@ def pd_manage_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='20
     df=df.loc[df['所属二级部'].str.contains('汇总', regex=True)==False]
 
     project=pd.read_excel(xls_project, sheet_name=0)
-    project=project.loc[project['项目编号'].str.contains('.*-[WO]')]
+    # project=project.loc[project['项目编号'].str.contains('.*-[WO]')]
 
     res_df=pd.DataFrame(columns=['月份', '项目类型', '项目编号', '项目名称', '项目状态', '所属部门级一', '所属部门级二', '所属部门级三', '所属部门级四', '累计总成本', '当年累计成本', '口径'])
     res_df['所属部门级二']=df['所属一级部']
@@ -96,7 +96,7 @@ def pd_idle_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='2018
     df=df.loc[df['二级部名称'].str.contains('汇总', regex=True)==False]
 
     project=pd.read_excel(xls_project, sheet_name=0)
-    project=project.loc[project['项目编号'].str.contains('.*-[YL]')]
+    # project=project.loc[project['项目编号'].str.contains('.*-[YL]')]
 
     res_df=pd.DataFrame(columns=['月份', '项目类型', '项目编号', '项目名称', '项目状态', '所属部门级一', '所属部门级二', '所属部门级三', '所属部门级四', '累计总成本', '当年累计成本', '口径'])
     res_df['所属部门级二']=df['一级部名称']
@@ -130,9 +130,9 @@ if __name__ == "__main__":
     args=list()
     if(len(sys.argv) == 1):
         parser.print_help()
-        args.append(parser.parse_args('-p F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx --input F:/workspace/python/data/201812/售前、内部管理、产品研发预实对比明细表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_direct_cost'.split()))
-        args.append(parser.parse_args('-p F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx --input F:/workspace/python/data/201812/部门管理预实对比汇总表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_manage_cost'.split()))
-        args.append(parser.parse_args('-p F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx --input F:/workspace/python/data/201812/部门闲置预实对比汇总表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_idle_cost'.split()))
+        # args.append(parser.parse_args('-p F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx --input F:/workspace/python/data/201812/售前、内部管理、产品研发预实对比明细表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_direct_cost'.split()))
+        # args.append(parser.parse_args('-p F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx --input F:/workspace/python/data/201812/部门管理预实对比汇总表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_manage_cost'.split()))
+        args.append(parser.parse_args('-p F:/workspace/python/data/201903/非立项项目列表-201903.xlsx --input F:/workspace/python/data/201903/部门闲置预实对比汇总表-201903.xls --output F:/workspace/python/data/201903/非项目损益明细表-201903.xlsx -t 201903 -m pd_idle_cost'.split()))
         # args.append(parser.parse_args('--input F:/workspace/python/data/201812/项目人工投入统计表(按人员-项目).xls -t 201812 -o F:/workspace/python/data/201812/项目人工投入统计表(按人员-项目)-201812.xlsx -m pd_workload'.split()))
     else:
         args.append(parser.parse_args())
