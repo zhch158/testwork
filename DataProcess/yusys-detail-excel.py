@@ -32,7 +32,7 @@ if __name__ == "__main__":
         # parser.print_help()
         # args=parser.parse_args('--config ./yusys-detail-excel.yaml'.split())
         # args=parser.parse_args('--yyyymm 201901 --config ./yusys-detail-excel.yaml --section 项目人工投入'.split())
-        args=parser.parse_args('--workdir F:/workspace/python/data --yyyymm 201901 --config ./yusys-detail-excel.yaml --section 项目人工投入'.split())
+        args=parser.parse_args('--workdir F:/workspace/python/data --yyyymm 201901 --config ./yusys-detail-excel.yaml --section 非项目费用'.split())
     else:
         args=parser.parse_args()
 

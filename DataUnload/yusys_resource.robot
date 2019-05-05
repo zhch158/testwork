@@ -41,7 +41,8 @@ ${paramsfile}     ./${浏览器}.params.json
 
 选择核算类别
     [Arguments]     ${核算类别}
-    Sleep            2
+    Sleep            1
+    Wait Until Element Is Enabled   css:#s2id_accountingmethod > a > span       60
     # Click Element    xpath://div[@id='s2id_accountingmethod']/a/span
     # Click Element    css:#s2id_accountingmethod > a:nth-child(1) > span:nth-child(1)
     # Click Element    css:#s2id_accountingmethod > a.select2-choice > span
@@ -170,14 +171,21 @@ ${paramsfile}     ./${浏览器}.params.json
 项目投入明细
     [Arguments]     ${报表首页}    ${查询时间}   ${downloaddir}    ${保存目录}
     跳转网页         ${报表首页}
+    Sleep            1
+    Wait Until Element Is Enabled       identifier:xdglxt      60
     Click Element   css:#research-system                 #切换应用系统
+    # my_wait_until_element_visibility   id:xdglxt      60 
+    # Wait Until Element Is Visible     identifier:xdglxt      60
     Click Element   identifier:xdglxt                    #考勤管理
+    my_wait_until_element_visibility   css:#Report_Analysis > span      60 
     Click Element   identifier:Report_Analysis           #考勤报表
     Click Element   identifier:Foundation_Report         #明细类
     Click Element   identifier:Staff_Inputs_Condition    #人员投入情况
     Click Element   identifier:yyglbb3                   #项目投入统计明细表
     switch_frame    yyglbb3-ifr-casually
-    my_wait_until_element_presence   name:startDate      60 
+    # my_wait_until_element_visibility   css:#emp_field_startDate > input      60 
+    Sleep            1
+    Wait Until Element Is Enabled      css:#emp_field_startDate > input    60
     Clear Element Text   identifier:startDate
     Input Text      identifier:startDate   ${查询时间}
     Click Button    button_query                         #执行查询

@@ -405,7 +405,31 @@ class InheritSeleniumLibrary(SeleniumLibrary):
                     raise AssertionError("my_wait[locator=%s, timeout=%s, loc_type=%s, loc_tag=%s] error " %(locator, seconds, loc_type.upper(), loc_tag))
                 break
             except Exception as e:
-                logger.error("times[%d], Exception[%s]" %(times, e))
+                logger.error("times[%d], loc_type[%s], loc_tag[%s], Exception[%s]" %(times, loc_type, loc_tag, e))
+                time.sleep(1)
+        else:
+            raise AssertionError("my_wait[locator=%s, timeout=%s, loc_type=%s, loc_tag=%s] error " %(locator, seconds, loc_type.upper(), loc_tag))
+
+    @keyword
+    def my_wait_until_element_visibility(self, locator, seconds):
+        loc_type, loc_tag=locator.split(":")
+        logger.info("locator[%s], seconds[%s], loc_type[%s], loc_tag[%s]" %(locator, seconds, loc_type, loc_tag))
+        timeout=int(seconds)
+        times=0
+        while(times<3):
+            try:
+                times += 1
+                if(loc_type.upper() == "ID"):
+                    self.element = WebDriverWait(self.driver, timeout, 1).until(EC.visibility_of_element_located((By.ID, loc_tag)))
+                elif(loc_type.upper() == "CSS"):
+                    self.element = WebDriverWait(self.driver, timeout, 1).until(EC.visibility_of_element_located((By.CSS_SELECTOR, loc_tag)))
+                elif(loc_type.upper() == "NAME"):
+                    self.element = WebDriverWait(self.driver, timeout, 1).until(EC.visibility_of_element_located((By.NAME, loc_tag)))
+                else:
+                    raise AssertionError("my_wait[locator=%s, timeout=%s, loc_type=%s, loc_tag=%s] error " %(locator, seconds, loc_type.upper(), loc_tag))
+                break
+            except Exception as e:
+                logger.error("times[%d], loc_type[%s], loc_tag[%s], Exception[%s]" %(times, loc_type, loc_tag, e))
                 time.sleep(1)
         else:
             raise AssertionError("my_wait[locator=%s, timeout=%s, loc_type=%s, loc_tag=%s] error " %(locator, seconds, loc_type.upper(), loc_tag))

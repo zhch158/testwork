@@ -38,7 +38,8 @@ config:
         #- [方法名, 文件名, 跳过行数]
         - ["pd_direct_cost", "${workdir}/${yyyymm}/售前、内部管理、产品研发预实对比明细表-${yyyymm}.xls", 2]
         - ["pd_manage_cost", "${workdir}/${yyyymm}/部门管理预实对比汇总表-${yyyymm}.xls", 2]
-        - ["pd_idle_cost", "${workdir}/${yyyymm}/部门闲置预实对比汇总表-${yyyymm}.xls", 2]
+        - ["pd_idle_cost_idle", "${workdir}/${yyyymm}/部门闲置预实对比汇总表-${yyyymm}.xls", 2]
+        - ["pd_idle_cost_holiday", "${workdir}/${yyyymm}/部门休假预实对比汇总表-${yyyymm}.xls", 2]
     输出文件: ${workdir}/${yyyymm}/非项目损益明细表-${yyyymm}.xlsx
     月份: ${yyyymm}
     非立项项目列表: ${workdir}/${yyyymm}/非立项项目列表-${yyyymm}.xlsx

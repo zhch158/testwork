@@ -41,7 +41,6 @@ ${DATADIR}    F:/workspace/python/data/${Y_M}
 下载非项目费用明细
     [Template]     非项目费用明细
     ${部门管理明细页}     ${Y_M}    ${downloaddir}    ${DATADIR}
-    ${部门闲置明细页}     ${Y_M}    ${downloaddir}    ${DATADIR}
     ${售前、内部管理、产品研发明细页}     ${Y_M}    ${downloaddir}    ${DATADIR}
 
 下载非项目费用明细-闲置、休假

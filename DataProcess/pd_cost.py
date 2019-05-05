@@ -88,9 +88,10 @@ def pd_manage_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='20
     # res_df['口径']='考核口径'
     res_df.to_excel(o_file, encoding='utf-8', sheet_name='部门管理', index=False, header=True)
 
-def pd_idle_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='201801', o_file="result.xlsx", skiprows=2):
+def pd_idle_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', sheet_name='部门闲置', yyyymm='201801', o_file="result.xlsx", skiprows=2):
     data=pd.read_excel(xls_file, sheet_name=xls_sheet, skiprows=skiprows, skipfooter=0)
-    df=pd.DataFrame(data).loc[:, ['一级部名称', '二级部名称', '累计至今部门闲置实际支出']]
+    cost_colname='累计至今'+sheet_name+'实际支出'
+    df=pd.DataFrame(data).loc[:, ['一级部名称', '二级部名称', cost_colname]]
     print("file[%s], rows[%d], cols[%d]" %(xls_file, df.iloc[:,0].size, df.columns.size))
     df=df.fillna(method='ffill')
     df=df.loc[df['二级部名称'].str.contains('汇总', regex=True)==False]
@@ -101,19 +102,28 @@ def pd_idle_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='2018
     res_df=pd.DataFrame(columns=['月份', '项目类型', '项目编号', '项目名称', '项目状态', '所属部门级一', '所属部门级二', '所属部门级三', '所属部门级四', '累计总成本', '当年累计成本', '口径'])
     res_df['所属部门级二']=df['一级部名称']
     res_df['所属部门级三']=df['二级部名称']
-    res_df['项目编号']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目编号', 'YTEC-2019-', '-Y'), axis=1)
-    res_df['项目名称']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目名称', suffix='-部门闲置'), axis=1)
+    if(sheet_name=='部门闲置'):
+        res_df['项目编号']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目编号', 'YTEC-2019-', '-Y'), axis=1)
+    else:
+        res_df['项目编号']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目编号', 'YTEC-2019-', '-L'), axis=1)
+    res_df['项目名称']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目名称', suffix=sheet_name), axis=1)
     res_df['所属部门级一']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目所属部门级一', lev2_name=row['一级部名称'], match_col='项目所属部门级二', prefix='ERROR-'), axis=1)
-    res_df['累计总成本']=df['累计至今部门闲置实际支出']
-    res_df['当年累计成本']=df['累计至今部门闲置实际支出']
+    res_df['累计总成本']=df[cost_colname]
+    res_df['当年累计成本']=df[cost_colname]
 
     res_df['月份']=yyyymm
     res_df['项目状态']='考勤报工'
-    res_df['项目类型']='部门闲置'
+    res_df['项目类型']=sheet_name
     res_df.loc[res_df['项目编号'].str.contains('.*-Y'), '项目类型']= '部门闲置'
     res_df.loc[res_df['项目编号'].str.contains('.*-L'), '项目类型']= '部门休假'
     # res_df['口径']='考核口径'
-    res_df.to_excel(o_file, encoding='utf-8', sheet_name='部门闲置', index=False, header=True)
+    res_df.to_excel(o_file, encoding='utf-8', sheet_name=sheet_name, index=False, header=True)
+
+def pd_idle_cost_idle(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='201800', o_file="result.xlsx", skiprows=2):
+    pd_idle_cost(xls_file, xls_sheet, xls_project, '部门闲置', yyyymm, o_file, skiprows)
+
+def pd_idle_cost_holiday(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='201800', o_file="result.xlsx", skiprows=2):
+    pd_idle_cost(xls_file, xls_sheet, xls_project, '部门休假', yyyymm, o_file, skiprows)
 
 parser=argparse.ArgumentParser(description='加工人月投入，售前、内部管理、产品研发，部门管理，部门闲置明细数据')
 # parser.add_argument('integers', metavar='N', type=int, nargs='+', help='an integer for the accumulator')
@@ -123,7 +133,7 @@ parser.add_argument('--input', '-i', dest='inputfile', required=True, help='inpu
 parser.add_argument('--output', '-o', dest='outputfile', required=True, help='output excel file')
 parser.add_argument('--yyyymm', '-t', dest='yyyymm', type=str, required=True, help='输入年月yyyymm')
 parser.add_argument('--projectfile', '-p', dest='projectfile', required=False, help='部门管理、闲置项目列表')
-parser.add_argument('--method', '-m', dest='method', required=True, help='选择调用方法', choices=['pd_workload', 'pd_direct_cost', 'pd_manage_cost', 'pd_idle_cost'])
+parser.add_argument('--method', '-m', dest='method', required=True, help='选择调用方法', choices=['pd_workload', 'pd_direct_cost', 'pd_manage_cost', 'pd_idle_cost_idle', 'pd_idle_cost_holiday'])
 
 if __name__ == "__main__":
     # 测试用
@@ -132,7 +142,7 @@ if __name__ == "__main__":
         parser.print_help()
         # args.append(parser.parse_args('-p F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx --input F:/workspace/python/data/201812/售前、内部管理、产品研发预实对比明细表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_direct_cost'.split()))
         # args.append(parser.parse_args('-p F:/workspace/python/data/201812/PROJECT-RY-201812.xlsx --input F:/workspace/python/data/201812/部门管理预实对比汇总表.xls --output F:/workspace/python/data/201812/非项目损益明细表-201812.xlsx -t 201812 -m pd_manage_cost'.split()))
-        args.append(parser.parse_args('-p F:/workspace/python/data/201903/非立项项目列表-201903.xlsx --input F:/workspace/python/data/201903/部门闲置预实对比汇总表-201903.xls --output F:/workspace/python/data/201903/非项目损益明细表-201903.xlsx -t 201903 -m pd_idle_cost'.split()))
+        args.append(parser.parse_args('-p F:/workspace/python/data/201901/非立项项目列表-201901.xlsx --input F:/workspace/python/data/201901/部门休假预实对比汇总表-201901.xls --output F:/workspace/python/data/201901/非项目损益明细表-201901.xlsx -t 201901 -m pd_idle_cost_holiday'.split()))
         # args.append(parser.parse_args('--input F:/workspace/python/data/201812/项目人工投入统计表(按人员-项目).xls -t 201812 -o F:/workspace/python/data/201812/项目人工投入统计表(按人员-项目)-201812.xlsx -m pd_workload'.split()))
     else:
         args.append(parser.parse_args())
