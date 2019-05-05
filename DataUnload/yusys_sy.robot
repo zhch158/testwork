@@ -44,6 +44,11 @@ ${DATADIR}    F:/workspace/python/data/${Y_M}
     ${部门闲置明细页}     ${Y_M}    ${downloaddir}    ${DATADIR}
     ${售前、内部管理、产品研发明细页}     ${Y_M}    ${downloaddir}    ${DATADIR}
 
+下载非项目费用明细-闲置、休假
+    [Template]     非项目费用明细-闲置、休假
+    ${部门闲置明细页}     ${Y_M}    部门闲置       ${downloaddir}    ${DATADIR}
+    ${部门闲置明细页}     ${Y_M}    部门休假       ${downloaddir}    ${DATADIR}
+
 下载项目投入明细
     [Template]     项目投入明细
     ${主页}     ${Y_M}    ${downloaddir}    ${DATADIR}

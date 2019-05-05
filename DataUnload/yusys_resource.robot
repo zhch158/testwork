@@ -79,6 +79,12 @@ ${paramsfile}     ./${浏览器}.params.json
     Click Element    css:#s2id_orgtype > a > span
     Click Element    css:li.select2-results-dept-0 > div.select2-result-label[title='${部门类型}']
 
+选择项目类型
+    [Arguments]     ${项目类型}
+    Wait Until Element Is Enabled   css:#s2id_projectType > a > span
+    Click Element    css:#s2id_projectType > a > span
+    Click Element    css:li.select2-results-dept-0 > div.select2-result-label[title='${项目类型}']
+
 执行查询
     Click Button     query
     # Wait Until Element Is Enabled     query       120
@@ -150,6 +156,14 @@ ${paramsfile}     ./${浏览器}.params.json
     [Arguments]     ${报表首页}    ${查询时间}   ${downloaddir}    ${保存目录}
     跳转网页         ${报表首页}      
     输入查询时间     ${查询时间}
+    执行查询
+    下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
+
+非项目费用明细-闲置、休假
+    [Arguments]     ${报表首页}    ${查询时间}   ${项目类型}       ${downloaddir}    ${保存目录}
+    跳转网页         ${报表首页}      
+    输入查询时间     ${查询时间}
+    选择项目类型     ${项目类型}
     执行查询
     下载报表结果     ${downloaddir}        ${查询时间}        ${保存目录}
 
