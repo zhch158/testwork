@@ -1,6 +1,6 @@
 #全局设置
 config:
-    yyyymm: '201903'
+    yyyymm: '201901'
     workdir: F:/workspace/python/data
     dbconfig: ./database.ini
     

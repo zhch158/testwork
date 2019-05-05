@@ -30,9 +30,9 @@ if __name__ == "__main__":
 
     if(len(sys.argv) == 1):
         # parser.print_help()
-        # args=parser.parse_args('--config ./yusys-detail-excel.yaml'.split())
+        args=parser.parse_args('--config ./yusys-detail-excel.yaml'.split())
         # args=parser.parse_args('--yyyymm 201901 --config ./yusys-detail-excel.yaml --section 项目人工投入'.split())
-        args=parser.parse_args('--workdir F:/workspace/python/data --yyyymm 201901 --config ./yusys-detail-excel.yaml --section 非项目费用'.split())
+        # args=parser.parse_args('--workdir F:/workspace/python/data --yyyymm 201901 --config ./yusys-detail-excel.yaml --section 非项目费用'.split())
     else:
         args=parser.parse_args()
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
             print('pd_melt(xls_file=%s, xls_sheet=%s, o_file=%s)' %(pp_input, pp_input_sheet, pp_output))
             pd_melt(pp_input, pp_input_sheet, pp_output)
     
-    elif(section_name==None or section_name=="项目人工投入"):
+    if(section_name==None or section_name=="项目人工投入"):
         workload_dict=config_dic.get("项目人工投入", None)
         if(workload_dict!=None):
             workload_list=workload_dict.get("输入文件", None)
@@ -85,7 +85,7 @@ if __name__ == "__main__":
                 func(xls_file=workload_input, yyyymm=workload_yyyymm, o_file=writer, skiprows=skiprows)
             writer.save()
     
-    elif(section_name==None or section_name=="非立项项目列表"):
+    if(section_name==None or section_name=="非立项项目列表"):
         b_dict=config_dic.get("非立项项目列表", None)
         if(b_dict!=None):
             db_params=get_db_conf(config['dbconfig'])
@@ -94,7 +94,7 @@ if __name__ == "__main__":
             print('pd_project(o_file=%s)' %(b_output))
             pd_project(pdConn.engine, o_file=b_output)
     
-    elif(section_name==None or section_name=="项目损益"):
+    if(section_name==None or section_name=="项目损益"):
         xm_dict=config_dic.get("项目损益", None)
         if(xm_dict!=None):
             xm_list=xm_dict.get("输入文件", None)
@@ -111,7 +111,7 @@ if __name__ == "__main__":
                 func(xls_file=xm_input, yyyymm=xm_yyyymm, o_file=writer, skiprows=skiprows)
             writer.save()
     
-    elif(section_name==None or section_name=="非项目费用"):
+    if(section_name==None or section_name=="非项目费用"):
         fxm_dict=config_dic.get("非项目费用", None)
         if(fxm_dict!=None):
             fxm_list=fxm_dict.get("输入文件", None)
@@ -129,7 +129,7 @@ if __name__ == "__main__":
                 func(xls_file=fxm_input, xls_project=fxm_project, yyyymm=fxm_yyyymm, o_file=writer, skiprows=skiprows)
             writer.save()
     
-    elif(section_name==None or section_name=="同步数据库"):
+    if(section_name==None or section_name=="同步数据库"):
         sync_dict=config_dic.get("同步数据库", None)
         if(sync_dict!=None):
             db_params=get_db_conf(config['dbconfig'])
@@ -145,7 +145,7 @@ if __name__ == "__main__":
                     continue
                 func(pdConn.engine, tablename=sync_table, xls_file=sync_input, yyyymm=sync_yyyymm)
     
-    elif(section_name==None or section_name=="调整数据库"):
+    if(section_name==None or section_name=="调整数据库"):
         upd_dict=config_dic.get("调整数据库", None)
         if(upd_dict!=None):
             db_params=get_db_conf(config['dbconfig'])
@@ -165,6 +165,3 @@ if __name__ == "__main__":
                     mydb.rollback()
             #关闭数据库
             mydb.close()
-
-    else:
-        print("Config Section Error{%s]" %section_name)
