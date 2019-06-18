@@ -80,7 +80,8 @@ def pd_branch(engine, o_file="branch.xlsx"):
     df.to_excel(o_file, encoding='utf-8', sheet_name='部门列表', index=False, header=True)
 
 def pd_project(engine, o_file="project.xlsx"):
-    sql_content="SELECT distinct t.项目编号, t.项目名称, t.项目类型, t.项目所属部门级一, t.项目所属部门级二, t.项目所属部门级三, t.项目所属部门级四 FROM RY_YCOMS t WHERE t.项目名称 LIKE '%%部门管理' OR t.项目名称 LIKE '%%部门闲置' OR t.项目名称 LIKE '%%部门休假' OR t.项目名称 LIKE '%%部门日常' order by 1"
+    # sql_content="SELECT distinct t.项目编号, t.项目名称, t.项目类型, t.项目所属部门级一, t.项目所属部门级二, t.项目所属部门级三, t.项目所属部门级四 FROM RY_YCOMS t WHERE t.项目名称 LIKE '%%部门管理' OR t.项目名称 LIKE '%%部门闲置' OR t.项目名称 LIKE '%%部门休假' OR t.项目名称 LIKE '%%部门日常' order by 1"
+    sql_content="SELECT distinct t.项目编号, t.项目名称, t.项目类型, t.项目所属部门级一, t.项目所属部门级二, t.项目所属部门级三, t.项目所属部门级四 FROM RY_YCOMS t WHERE t.项目名称 LIKE '%%部门管理' OR t.项目名称 LIKE '%%部门闲置' OR t.项目名称 LIKE '%%部门休假' OR t.项目名称 LIKE '%%部门日常' UNION select distinct CONCAT('YTEC-2019-', p.所属部门级三, '-Z'), CONCAT('未知-', p.所属部门级三), '未知', p.所属部门级一, p.所属部门级二, p.所属部门级三, p.所属部门级四 from 项目损益明细 as p order by 1"
     df=pd.read_sql(sql_content, engine)
     print("table[%s], rows[%d], cols[%d]" %('RY_YCOMS', df.iloc[:,0].size, df.columns.size))
     df.loc[df['项目名称'].str.contains('.*部门管理'), '项目类型']= '部门管理'
