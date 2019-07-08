@@ -6,8 +6,11 @@ import argparse
 import getopt
 import pandas as pd
 
-def set_value(project, lev3_name, col_name, prefix='', suffix='', lev2_name=None, match_col=None):
-    row=project.loc[project['项目所属部门级三']==lev3_name]
+def set_value(project, lev3_name, col_name, prj_type=None, prefix='', suffix='', lev2_name=None, match_col=None):
+    if(prj_type!=None):
+        row=project.loc[project['项目所属部门级三']==lev3_name & project['项目类型']==prj_type]
+    else:
+        row=project.loc[project['项目所属部门级三']==lev3_name]
     if(row.size>0):
         return row[col_name].values[0]
     else:
@@ -76,8 +79,8 @@ def pd_manage_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', yyyymm='20
     res_df['所属部门级三']=df['所属二级部']
     # res_df['项目编号']=df['所属二级部'].apply(lambda x: set_value(x, 'YTEC-2019-', '-W'))
     # res_df['项目名称']=df['所属二级部'].apply(lambda x:set_value(x, suffix='-部门管理'))
-    res_df['项目编号']=df.apply(lambda row: set_value(project, row['所属二级部'], '项目编号', 'YTEC-2019-', '-W'), axis=1)
-    res_df['项目名称']=df.apply(lambda row: set_value(project, row['所属二级部'], '项目名称', suffix='-部门管理'), axis=1)
+    res_df['项目编号']=df.apply(lambda row: set_value(project, row['所属二级部'], '项目编号', prj_type='部门管理', prefix='YTEC-2019-', suffix='-W'), axis=1)
+    res_df['项目名称']=df.apply(lambda row: set_value(project, row['所属二级部'], '项目名称', prj_type='部门管理', suffix='-部门管理'), axis=1)
     res_df['所属部门级一']=df.apply(lambda row: set_value(project, row['所属二级部'], '项目所属部门级一', lev2_name=row['所属一级部'], match_col='项目所属部门级二', prefix='ERROR-'), axis=1)
     res_df['累计总成本']=df['部门总累计实际数  ']
     res_df['当年累计成本']=df['部门总累计实际数  ']
@@ -103,10 +106,11 @@ def pd_idle_cost(xls_file, xls_sheet=0, xls_project='project.xlsx', sheet_name='
     res_df['所属部门级二']=df['一级部名称']
     res_df['所属部门级三']=df['二级部名称']
     if(sheet_name=='部门闲置'):
-        res_df['项目编号']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目编号', 'YTEC-2019-', '-Y'), axis=1)
+        res_df['项目编号']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目编号', prj_type='部门闲置', prefix='YTEC-2019-', suffix='-Y'), axis=1)
+        res_df['项目名称']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目名称', prj_type='部门闲置', suffix=sheet_name), axis=1)
     else:
-        res_df['项目编号']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目编号', 'YTEC-2019-', '-L'), axis=1)
-    res_df['项目名称']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目名称', suffix=sheet_name), axis=1)
+        res_df['项目编号']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目编号', prj_type='部门休假', prefix='YTEC-2019-', suffix='-L'), axis=1)
+        res_df['项目名称']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目名称', prj_type='部门休假', suffix=sheet_name), axis=1)
     res_df['所属部门级一']=df.apply(lambda row: set_value(project, row['二级部名称'], '项目所属部门级一', lev2_name=row['一级部名称'], match_col='项目所属部门级二', prefix='ERROR-'), axis=1)
     res_df['累计总成本']=df[cost_colname]
     res_df['当年累计成本']=df[cost_colname]
