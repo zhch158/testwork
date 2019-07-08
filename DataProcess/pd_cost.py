@@ -8,7 +8,7 @@ import pandas as pd
 
 def set_value(project, lev3_name, col_name, prj_type=None, prefix='', suffix='', lev2_name=None, match_col=None):
     if(prj_type!=None):
-        row=project.loc[project['项目所属部门级三']==lev3_name & project['项目类型']==prj_type]
+        row=project.loc[(project['项目所属部门级三']==lev3_name) & (project['项目类型']==prj_type)]
     else:
         row=project.loc[project['项目所属部门级三']==lev3_name]
     if(row.size>0):
