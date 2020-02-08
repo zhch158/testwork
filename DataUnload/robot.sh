@@ -5,4 +5,5 @@ then
 	exit 1
 fi
 yyyymm=$1
+robot.exe -d X:/Temp/log yusys_login.robot
 robot.exe -d X:/Temp/log -v Y_M:$yyyymm yusys_sy.robot
