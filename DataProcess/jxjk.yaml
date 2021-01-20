@@ -23,12 +23,11 @@ config:
 
 同步数据库:
     输入文件:
-        - ["sync_table", "${workdir}/${yyyymm}/项目人工投入统计表-${yyyymm}.xlsx", "RY_YCOMS"]
+        - ["sync_table", "${workdir}/out/项目人工投入统计表-${yyyymm}.xlsx", "RY_YCOMS"]
     月份: ${yyyymm}
 
 调整数据库:
     输入文件:
         - "upd_RY_ZHCH"
-        - "upd_project"
         - "upd_RY_YCOMS"
     月份: ${yyyymm}
