@@ -1,0 +1,34 @@
+#全局设置
+config:
+    yyyymm: '202012'
+    workdir: F:/建信金科/项目监控/2020/人月
+    dbconfig: ./database.ini
+    
+# 部门列表:
+#     输入文件: "${workdir}/执行中组织结构基本信息表 20181225130600.xlsx"
+#     输出文件: "${workdir}/部门列表-${yyyymm}.xlsx"
+
+# 产品归属:
+#     输入文件:
+#         #- [文件名, SHEET名称]
+#         ["${workdir}/实施产品确认-1211 - 考核口径 - 考核单元计算 -0123.xlsx", "PP"]
+#     输出文件: ${workdir}/pp-${yyyymm}.xlsx
+
+项目人工投入:
+    输入文件:
+        #- [方法名, 文件名, 跳过行数]
+        - ["pd_workload", "${workdir}/项目人工投入统计表(按人员-项目)-${yyyymm}.xls", 2]
+    输出文件: ${workdir}/out/项目人工投入统计表-${yyyymm}.xlsx
+    月份: ${yyyymm}
+
+同步数据库:
+    输入文件:
+        - ["sync_table", "${workdir}/${yyyymm}/项目人工投入统计表-${yyyymm}.xlsx", "RY_YCOMS"]
+    月份: ${yyyymm}
+
+调整数据库:
+    输入文件:
+        - "upd_RY_ZHCH"
+        - "upd_project"
+        - "upd_RY_YCOMS"
+    月份: ${yyyymm}
