@@ -5,7 +5,7 @@ Suite Setup       连接网页
 # Suite Teardown    退出
 
 *** Variables ***
-${Y_M}        2019-03
+${Y_M}        2020-12
 ${DATADIR}    F:/workspace/python/data/${Y_M}
 
 

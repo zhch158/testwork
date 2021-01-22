@@ -185,8 +185,9 @@ ${paramsfile}     ./${浏览器}.params.json
     switch_frame    yyglbb3-ifr-casually
     # Wait Until Element Is Enabled      css:#emp_field_S_ORG.ORGANNAME1 > button     60
     # Click Element   css:#emp_field_S_ORG\.ORGANNAME1 > button         #项目所属部门
+    Wait Until Element Is Enabled   xpath=//*[@id="emp_field_S_ORG.ORGANNAME1"]/button      60      #项目所属部门
     Click Element   xpath=//*[@id="emp_field_S_ORG.ORGANNAME1"]/button      #项目所属部门
-	Sleep           1
+	# Sleep           1
 	# ${handles}      Get Window Handles
 	# Switch Window   ${handles[1]}           #切换到新开窗口
 	Switch Window   NEW                       #切换到新开窗口
@@ -198,7 +199,6 @@ ${paramsfile}     ./${浏览器}.params.json
     # my_wait_until_element_visibility   css:#emp_field_startDate > input      60 
     # Sleep            1
     Wait Until Element Is Enabled      css:#emp_field_startDate > input    60
-    # Click Element   identifier:startDate
     Clear Element Text   identifier:startDate
     Input Text      identifier:startDate   ${查询时间}
     Click Button    button_query                         #执行查询
