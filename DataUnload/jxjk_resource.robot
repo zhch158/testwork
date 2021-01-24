@@ -183,10 +183,10 @@ ${paramsfile}     ./${浏览器}.params.json
     Click Element   identifier:Staff_Inputs_Condition    #人员投入情况
     Click Element   identifier:yyglbb3                   #项目投入统计明细表
     switch_frame    yyglbb3-ifr-casually
-    # Wait Until Element Is Enabled      css:#emp_field_S_ORG.ORGANNAME1 > button     60
+    # Wait Until Element Is Enabled      css:#emp_field_S_ORG\.ORGANNAME1 > button     60
     # Click Element   css:#emp_field_S_ORG\.ORGANNAME1 > button         #项目所属部门
-    Wait Until Element Is Enabled   xpath=//*[@id="emp_field_S_ORG.ORGANNAME1"]/button      60      #项目所属部门
-    Click Element   xpath=//*[@id="emp_field_S_ORG.ORGANNAME1"]/button      #项目所属部门
+    Wait Until Element Is Enabled   xpath://*[@id="emp_field_S_ORG.ORGANNAME1"]/button      60      #项目所属部门
+    Click Element   xpath://*[@id="emp_field_S_ORG.ORGANNAME1"]/button      #项目所属部门
 	# Sleep           1
 	# ${handles}      Get Window Handles
 	# Switch Window   ${handles[1]}           #切换到新开窗口

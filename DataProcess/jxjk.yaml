@@ -1,7 +1,7 @@
 #全局设置
 config:
     yyyymm: '202012'
-    workdir: F:/建信金科/项目监控/2020/人月
+    workdir: F:/建信金科/项目监控/2021/人月
     dbconfig: ./database.ini
     
 # 部门列表:
